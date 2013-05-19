@@ -25,7 +25,6 @@ shared_context "stub_list_graph" do
     stub_request(:get, "#{base_uri}/json/list/graph").to_return(:status => 200, :body => list_graph_example.to_json)
   end
   before(:each, &proc)
-  before(:all, &proc)
 end
 
 shared_context "stub_get_graph" do
@@ -64,7 +63,6 @@ shared_context "stub_get_graph" do
     to_return(:status => 200, :body => graph_example.to_json)
   end
   before(:each, &proc)
-  before(:all, &proc)
 end
 
 shared_context "stub_post_graph" do
@@ -74,7 +72,6 @@ shared_context "stub_post_graph" do
     to_return(:status => 200, :body => { "error" => 0, "data" => graph_example }.to_json)
   end
   before(:each, &proc)
-  before(:all, &proc)
 end
 
 shared_context "stub_delete_graph" do
@@ -83,7 +80,6 @@ shared_context "stub_delete_graph" do
     to_return(:status => 200, :body => { "error" => 0 }.to_json)
   end
   before(:each, &proc)
-  before(:all, &proc)
 end
 
 shared_context "stub_edit_graph" do
@@ -94,7 +90,6 @@ shared_context "stub_edit_graph" do
     to_return(:status => 200, :body => { "error" => 0 }.to_json)
   end
   before(:each, &proc)
-  before(:all, &proc)
 end
 
 shared_context "stub_list_complex" do
@@ -117,7 +112,6 @@ shared_context "stub_list_complex" do
     to_return(:status => 200, :body => list_complex_example.to_json)
   end
   before(:each, &proc)
-  before(:all, &proc)
 end
 
 shared_context "stub_delete_complex" do
@@ -126,7 +120,6 @@ shared_context "stub_delete_complex" do
     to_return(:status => 200, :body => { "error" => 0 }.to_json)
   end
   before(:each, &proc)
-  before(:all, &proc)
 end
 
 shared_context "stub_create_complex" do
@@ -142,6 +135,5 @@ shared_context "stub_create_complex" do
     to_return(:status => 200, :body => { "error" => 0 }.to_json)
   end
   before(:each, &proc)
-  before(:all, &proc)
 end
 

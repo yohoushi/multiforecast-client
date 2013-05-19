@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Mg::Client do
   include Mg::ConversionRule
-  def gfpath(path)
-    URI.escape("#{service_name(path)}/#{section_name(path)}/#{graph_name(path)}")
-  end
+def client
+  Mg::Client.new([base_uri])
+end
 
   include_context "setup_mgclient"
   id_keys    = %w[gfuri path id service_name section_name graph_name]
@@ -20,7 +20,7 @@ describe Mg::Client do
 
   context "#get_graph" do
     include_context "stub_get_graph" if ENV['MOCK'] == 'on'
-    subject { @client.get_graph(graph["path"]) }
+    subject { client.get_graph(graph["path"]) }
     id_keys.each {|key| it { subject[key].should == graph[key] } }
     graph_keys.each {|key| it { subject.should have_key(key) } }
   end
@@ -31,7 +31,7 @@ describe Mg::Client do
     params = {
       'number' => 0,
     }
-    subject { @client.post_graph(graph["path"], params) }
+    subject { client.post_graph(graph["path"], params) }
     it { subject["error"].should == 0 }
     params.keys.each {|key| it { subject["data"][key].should == params[key] } }
   end
@@ -40,8 +40,8 @@ describe Mg::Client do
     include_context "stub_post_graph" if ENV['MOCK'] == 'on'
     include_context "stub_delete_graph" if ENV['MOCK'] == 'on'
     let(:graph) { { 'path' => "app name/host name/delete:test" } }
-    before  { @client.post_graph(graph['path'], { 'number' => 0 }) }
-    subject { @client.delete_graph(graph['path']) }
+    before  { client.post_graph(graph['path'], { 'number' => 0 }) }
+    subject { client.delete_graph(graph['path']) }
     it { subject["error"].should == 0 }
   end
 
@@ -54,10 +54,10 @@ describe Mg::Client do
       'unit' => 'sec',
       'color'  => "#000000"
     }
-    before(:all) do
-      @before = @client.get_graph(graph["path"])
-      @response = @client.edit_graph(graph["path"], params)
-      @after = @client.get_graph(graph["path"])
+    before do
+      @before = client.get_graph(graph["path"])
+      @response = client.edit_graph(graph["path"], params)
+      @after = client.get_graph(graph["path"])
     end
     it { @response["error"].should == 0 }
     # @todo: how to stub @after?
@@ -71,8 +71,6 @@ describe Mg::Client do
     include_context "stub_create_complex" if ENV['MOCK'] == 'on'
     include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
 
-    before(:all) {
-    }
     context "normal" do
       let(:from_graphs) do
         [
@@ -87,9 +85,9 @@ describe Mg::Client do
           "sort"         => 10
         }
       end
-      subject { @client.create_complex(from_graphs, to_complex) }
+      subject { client.create_complex(from_graphs, to_complex) }
       it { subject["error"].should == 0 }
-      after { @client.delete_complex(to_complex["path"]) }
+      after { client.delete_complex(to_complex["path"]) }
     end
   end
 end
