@@ -1,6 +1,6 @@
 # mgclient
 
-testing ruby: 1.9.3; GrowthForecast: > 0.39
+testing ruby: 1.9.3; GrowthForecast: > 0.70?
 
 ## About mgclient
 
