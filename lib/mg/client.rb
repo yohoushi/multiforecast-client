@@ -12,12 +12,12 @@ module Mg
     attr_accessor :debug
 
     # @param [String] rules
-    #   Regular Expression for path => growthforecast base_uri
-    def initialize(rules = { '.*' => 'http://locahost:5125' })
+    #   dir path => growthforecast base_uri
+    def initialize(rules = { '' => 'http://locahost:5125' })
       @clients = []
       @rules   = {}
-      rules.each_with_index do |(regexp, base_uri), i|
-        @rules[Regexp.compile(regexp)] = i
+      rules.each_with_index do |(dir, base_uri), i|
+        @rules[dir] = i
         @clients[i] = GrowthForecast::Client.new(base_uri)
       end
     end
@@ -25,6 +25,10 @@ module Mg
     def debug=(flag)
       @debug = flag
       @clients.each {|c| c.debug = flag }
+    end
+
+    def clients(dir = nil)
+      dir.nil? ? @clients : @clients.values_at(*ids(dir)).compact
     end
 
     def client(path)
@@ -80,9 +84,8 @@ module Mg
     #    "id"=>3},
     # ]
     def list_graph(dir = nil)
-      clients = dir.nil? ? @clients : @clients.values_at(*ids(dir))
       mgroot = service_name # not necessary, but useful
-      clients.inject([]) do |ret, client|
+      clients(dir).inject([]) do |ret, client|
         graphs = []
         client.list_graph(mgroot).each do |graph|
           graph['gfuri'] = client.base_uri
@@ -90,7 +93,7 @@ module Mg
           graphs << graph if dir.nil? or graph['path'].index(dir) == 0
         end
         ret = ret + graphs
-      end unless clients.nil?
+      end
     end
 
     # Get the propety of a graph, GET /api/:path
@@ -173,9 +176,8 @@ module Mg
     #    "id"=>3},
     # ]
     def list_complex(dir = nil)
-      clients = dir.nil? ? @clients : @clients.values_at(*ids(dir))
       mgroot = service_name # not necessary, but useful
-      clients.inject([]) do |ret, client|
+      clients(dir).inject([]) do |ret, client|
         graphs = []
         client.list_complex(mgroot).each do |graph|
           graph['gfuri'] = client.base_uri
@@ -183,7 +185,7 @@ module Mg
           graphs << graph if dir.nil? or graph['path'].index(dir) == 0
         end
         ret = ret + graphs
-      end unless clients.nil?
+      end
     end
 
     # Create a complex graph

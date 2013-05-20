@@ -20,15 +20,15 @@ module Mg
     end
 
     def id(path)
-      @rules.each do |regexp, id|
-        return id if path =~ regexp
+      @rules.each do |dir, id|
+        return id if path.index(dir) == 0
       end
       return 0
     end
 
     def ids(path)
-      @rules.each_with_object([]) do |(regexp, id), ids|
-        ids << id if path =~ regexp
+      @rules.each_with_object([]) do |(dir, id), ids|
+        ids << id if path.index(dir) == 0
       end
     end
   end

@@ -3,10 +3,10 @@ require 'mgclient'
 require 'pp'
 
 ### Create a Multi GrowthForecast Client, the parameter is balancing rule and the base URI of GrowthForecast
-### The path matched with the regexp is balanced to the targeted GrwothForecast
+### dirpath => GrowthForecast
 client = Mg::Client.new({
-  '^app1\/' => 'http://localhost:5125',
-  '^app2\/' => 'http://localhost:5000',
+  'app1/' => 'http://localhost:5125',
+  'app2/' => 'http://localhost:5000',
 })
 
 pp 'Create a graph (Post a number)'
