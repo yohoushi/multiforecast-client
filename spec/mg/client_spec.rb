@@ -10,6 +10,8 @@ end
   id_keys    = %w[gfuri path id service_name section_name graph_name]
   graph_keys = %w[number llimit mode stype adjustval gmode color created_at ulimit description
                   sulimit unit sort updated_at adjust type sllimit meta md5]
+  complex_keys = %w[number complex created_at service_name section_name id graph_name data sumup
+                    description sort updated_at]
 
   context "#list_graph" do
     include_context "stub_list_graph" if ENV['MOCK'] == 'on'
@@ -70,25 +72,19 @@ end
   context "#create_complex" do
     include_context "stub_create_complex" if ENV['MOCK'] == 'on'
     include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
+    subject { client.create_complex(from_graphs, to_complex) }
+    it { subject["error"].should == 0 }
+    after { client.delete_complex(to_complex["path"]) }
+  end
 
-    context "normal" do
-      let(:from_graphs) do
-        [
-          graphs[0],
-          graphs[1],
-        ]
-      end
-      let(:to_complex) do
-        {
-          "path" => "app name/host name/complex graph test",
-          "description"  => "complex graph test",
-          "sort"         => 10
-        }
-      end
-      subject { client.create_complex(from_graphs, to_complex) }
-      it { subject["error"].should == 0 }
-      after { client.delete_complex(to_complex["path"]) }
-    end
+  context "#get_complex" do
+    include_context "stub_create_complex" if ENV['MOCK'] == 'on'
+    include_context "stub_get_complex" if ENV['MOCK'] == 'on'
+    include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
+    before { client.create_complex(from_graphs, to_complex) }
+    subject { client.get_complex(to_complex['path']) }
+    complex_keys.each {|key| it { subject.should have_key(key) } }
+    after { client.delete_complex(to_complex["path"]) }
   end
 end
 

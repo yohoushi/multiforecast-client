@@ -204,6 +204,32 @@ module Mg
       client(path).create_complex(from_graphs, to_complex)
     end
 
+    # Get a complex graph
+    #
+    # @param [String] path
+    # @return [Hash] the graph property
+    # @example
+    # {"number"=>0,
+    #  "complex"=>true,
+    #  "created_at"=>"2013/05/20 15:08:28",
+    #  "service_name"=>"app name",
+    #  "section_name"=>"host name",
+    #  "id"=>18,
+    #  "graph_name"=>"complex graph test",
+    #  "data"=>
+    #   [{"gmode"=>"gauge", "stack"=>false, "type"=>"AREA", "graph_id"=>218},
+    #    {"gmode"=>"gauge", "stack"=>true, "type"=>"AREA", "graph_id"=>217}],
+    #  "sumup"=>false,
+    #  "description"=>"complex graph test",
+    #  "sort"=>10,
+    #  "updated_at"=>"2013/05/20 15:08:28"}
+    def get_complex(path)
+      client(path).get_complex(service_name(path), section_name(path), graph_name(path)).tap do |graph|
+        graph['gfuri'] = client(path).base_uri
+        graph['path']  = path
+      end
+    end
+
     # Delete a complex graph
     #
     # @param [String] path

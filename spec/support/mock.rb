@@ -103,9 +103,6 @@ shared_context "stub_list_complex" do
        "id"=>1},
     ]
   end
-  def complex_example
-    list_complex_example.first
-  end
 
   proc = Proc.new do
     stub_request(:get, "#{base_uri}/json/list/complex").
@@ -114,9 +111,36 @@ shared_context "stub_list_complex" do
   before(:each, &proc)
 end
 
+shared_context "stub_get_complex" do
+  def complex_example
+    {"gfuri"=>"http://localhost:5125",
+     "path"=>"app name/host name/complex graph test",
+     "service_name"=>"mgclient",
+     "section_name"=>"mgclient",
+     "graph_name"=>"app+name%2Fhost+name%2Fcomplex+graph+test",
+     "number"=>0,
+     "complex"=>true,
+     "created_at"=>"2013/05/20 15:08:28",
+     "id"=>1,
+     "data"=>
+    [{"gmode"=>"gauge", "stack"=>false, "type"=>"AREA", "graph_id"=>218},
+     {"gmode"=>"gauge", "stack"=>true, "type"=>"AREA", "graph_id"=>217}],
+    "sumup"=>false,
+    "description"=>"complex graph test",
+    "sort"=>10,
+    "updated_at"=>"2013/05/20 15:08:28"}
+  end
+
+  proc = Proc.new do
+    stub_request(:get, "#{base_uri}/json/complex/#{gfpath(to_complex['path'])}").
+    to_return(:status => 200, :body => complex_example.to_json)
+  end
+  before(:each, &proc)
+end
+
 shared_context "stub_delete_complex" do
   proc = Proc.new do
-    stub_request(:post, "#{base_uri}/delete_complex/#{complex_example['id']}").
+    stub_request(:post, "#{base_uri}/json/delete/complex/#{gfpath(to_complex['path'])}").
     to_return(:status => 200, :body => { "error" => 0 }.to_json)
   end
   before(:each, &proc)
