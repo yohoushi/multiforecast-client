@@ -25,5 +25,11 @@ module Mg
       end
       return 0
     end
+
+    def ids(path)
+      @rules.each_with_object([]) do |(regexp, id), ids|
+        ids << id if path =~ regexp
+      end
+    end
   end
 end

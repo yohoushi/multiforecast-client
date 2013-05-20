@@ -79,14 +79,18 @@ module Mg
     #    "path"=>"test/hostname/<1sec_count",
     #    "id"=>3},
     # ]
-    def list_graph
+    def list_graph(dir = nil)
+      clients = dir.nil? ? @clients : @clients.values_at(*ids(dir))
+      mgroot = service_name # not necessary, but useful
       clients.inject([]) do |ret, client|
-        graphs = client.list_graph(service_name).each do |graph|
+        graphs = []
+        client.list_graph(mgroot).each do |graph|
           graph['gfuri'] = client.base_uri
           graph['path']  = path(graph['service_name'], graph['section_name'], graph['graph_name'])
+          graphs << graph if dir.nil? or graph['path'].index(dir) == 0
         end
         ret = ret + graphs
-      end
+      end unless clients.nil?
     end
 
     # Get the propety of a graph, GET /api/:path
@@ -168,14 +172,18 @@ module Mg
     #    "graph_name"=>"test%2Fhostname%2F%3C1sec_count",
     #    "id"=>3},
     # ]
-    def list_complex
+    def list_complex(dir = nil)
+      clients = dir.nil? ? @clients : @clients.values_at(*ids(dir))
+      mgroot = service_name # not necessary, but useful
       clients.inject([]) do |ret, client|
-        graphs = client.list_complex(service_name).each do |graph|
+        graphs = []
+        client.list_complex(mgroot).each do |graph|
           graph['gfuri'] = client.base_uri
           graph['path']  = path(graph['service_name'], graph['section_name'], graph['graph_name'])
+          graphs << graph if dir.nil? or graph['path'].index(dir) == 0
         end
         ret = ret + graphs
-      end
+      end unless clients.nil?
     end
 
     # Create a complex graph

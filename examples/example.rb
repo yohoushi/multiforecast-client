@@ -9,7 +9,7 @@ client = Mg::Client.new({
   '^app2\/' => 'http://localhost:5000',
 })
 
-### Create a graph (Post a number)
+pp 'Create a graph (Post a number)'
 client.post_graph('app1/2xx_count', { 'number' => 0 })
 client.post_graph('app1/3xx_count', { 'number' => 0 })
 pp client.post_graph('app2/2xx_count', { 'number' => 0 }) #=>
@@ -39,7 +39,7 @@ pp client.post_graph('app2/2xx_count', { 'number' => 0 }) #=>
 #    "sllimit"=>-100000,
 #    "md5"=>"c81e728d9d4c2f636f067f89cc14862c"}}
 
-### List graphs. All graphs from multiple growthforecasts are shown
+pp 'List graphs. All graphs from multiple growthforecasts are shown'
 pp client.list_graph #=>
 # [{"graph_name"=>"app1%2F3xx_count",
 #   "service_name"=>"mgclient",
@@ -60,7 +60,22 @@ pp client.list_graph #=>
 #   "gfuri"=>"http://localhost:5000",
 #   "path"=>"app2/2xx_count"}]
 
-### Get a graph property
+pp 'List graphs by filtering by dirpath app1/'
+pp client.list_graph('app1/') #=>
+# [{"graph_name"=>"app1%2F3xx_count",
+#   "service_name"=>"mgclient",
+#   "section_name"=>"mgclient",
+#   "id"=>2,
+#   "gfuri"=>"http://localhost:5125",
+#   "path"=>"app1/3xx_count"},
+#  {"graph_name"=>"app1%2F2xx_count",
+#   "service_name"=>"mgclient",
+#   "section_name"=>"mgclient",
+#   "id"=>1,
+#   "gfuri"=>"http://localhost:5125",
+#   "path"=>"app1/2xx_count"}]
+
+pp 'Get a graph property'
 pp client.get_graph('app2/2xx_count') #=>
 # {"number"=>0,
 #  "llimit"=>-1000000000,
@@ -88,15 +103,15 @@ pp client.get_graph('app2/2xx_count') #=>
 #  "gfuri"=>"http://localhost:5000",
 #  "path"=>"app2/2xx_count"}
 
-### Get a graph image uri
+pp 'Get a graph image uri'
 pp client.get_graph_uri('app2/2xx_count', '3h') #=>
 # "http://localhost:5125/graph/mgclient/mgclient/app1%2F2xx_count?t=3h"
 
-### Delete a complex graph
+pp 'Delete a complex graph'
 pp client.delete_graph('app2/2xx_count') #=>
 # {"location"=>"http://localhost:5000/list/mgclient/mgclient", "error"=>0}
 
-### Create a complex graph
+pp 'Create a complex graph'
 # Source graphs of a complex graph must exist on *a* GrowthForecast
 from_graphs= [
   {"path"=>'app1/2xx_count', "gmode" => 'gauge', "stack" => true, "type" => 'AREA'},
@@ -110,7 +125,7 @@ to_complex = {
 pp client.create_complex(from_graphs, to_complex) #=>
 # {"location"=>"http://localhost:5125/list/mgclient/mgclient", "error"=>0}
 
-### Get a complex graph
+pp 'Get a complex graph'
 pp client.get_complex(to_complex['path']) #=>
 # {"number"=>0,
 #  "complex"=>true,
@@ -129,15 +144,18 @@ pp client.get_complex(to_complex['path']) #=>
 #  "gfuri"=>"http://localhost:5125",
 #  "path"=>"app1/complex"}
 
-### Get a complex graph image uri
+pp 'Get a complex graph image uri'
 pp client.get_complex_uri(to_complex['path'], '3h') #=>
 # "http://localhost:5125/complex/graph/mgclient/mgclient/app1%2Fcomplex?t=3h"
 
-### List complex graphs
+pp 'List complex graphs'
 pp client.list_complex #=>
 # [{"service_name"=>"mgclient", "graph_name"=>"app1%2Fcomplex", "section_name"=>"mgclient", "id"=>1, "gfuri"=>"http://localhost:5125", "path"=>"app1/complex"}]
 
-### Delete a complex graph
+pp 'List complex graphs by filetering by dirpath app1/'
+pp client.list_complex('app1/')
+
+pp 'Delete a complex graph'
 pp client.delete_complex(to_complex['path']) #=>
 # {"location"=>"http://localhost:5125/list/mgclient/mgclient", "error"=>0}
 

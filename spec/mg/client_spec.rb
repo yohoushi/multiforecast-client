@@ -3,11 +3,11 @@ require 'spec_helper'
 describe Mg::Client do
   include Mg::ConversionRule
   include_context "setup_mgclient"
-  id_keys    = %w[gfuri path id service_name section_name graph_name]
-  graph_keys = %w[number llimit mode stype adjustval gmode color created_at ulimit description
-                  sulimit unit sort updated_at adjust type sllimit meta md5]
+  id_keys      = %w[gfuri path id service_name section_name graph_name]
+  graph_keys   = %w[number llimit mode stype adjustval gmode color created_at ulimit description
+                   sulimit unit sort updated_at adjust type sllimit meta md5]
   complex_keys = %w[number complex created_at service_name section_name id graph_name data sumup
-                    description sort updated_at]
+                   description sort updated_at]
 
   context "#list_graph" do
     include_context "stub_list_graph" if ENV['MOCK'] == 'on'
