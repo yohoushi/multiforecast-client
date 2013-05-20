@@ -240,6 +240,24 @@ module Mg
     def delete_complex(path)
       client(path).delete_complex(service_name(path), section_name(path), graph_name(path))
     end
+
+    # Get graph image uri
+    #
+    # @param [String] path
+    # @return [Hash]  error response
+    # @example
+    def get_graph_uri(path, unit = 'h')
+      "#{client(path).base_uri}/graph/#{service_name(path)}/#{section_name(path)}/#{graph_name(path)}?t=#{unit}"
+    end
+
+    # Get complex graph image uri
+    #
+    # @param [String] path
+    # @return [Hash]  error response
+    # @example
+    def get_complex_uri(path, unit = 'h')
+      "#{client(path).base_uri}/complex/graph/#{service_name(path)}/#{section_name(path)}/#{graph_name(path)}?t=#{unit}"
+    end
   end
 end
 
