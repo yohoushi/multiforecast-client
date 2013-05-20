@@ -17,7 +17,7 @@ Features
 
     gem install mgclient
 
-See [examples](examples) directory.
+See [examples](./examples) directory.
 
 ## Contributing
 

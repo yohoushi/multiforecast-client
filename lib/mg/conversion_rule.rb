@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+require 'cgi'
 
 module Mg
   module ConversionRule
@@ -11,11 +12,11 @@ module Mg
     end
 
     def graph_name(path)
-      CGI.escape(path)
+      ::CGI.escape(path)
     end
 
     def path(service_name, section_name, graph_name)
-      CGI.unescape(graph_name)
+      ::CGI.unescape(graph_name)
     end
 
     def id(path)
