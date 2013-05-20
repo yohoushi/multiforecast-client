@@ -11,14 +11,15 @@ module Mg
     attr_accessor :clients
     attr_accessor :debug
 
-    # @param [String] base_uri The base uri of GrowthForecast
-    def initialize(base_uris = ['http://locahost:5125'])
-      base_uris = base_uris.kind_of?(Array) ? base_uris : [base_uris]
+    # @param [String] rules
+    #   Regular Expression for path => growthforecast base_uri
+    def initialize(rules = { '.*' => 'http://locahost:5125' })
       @clients = []
-      base_uris.each do |base_uri|
-        @clients << GrowthForecast::Client.new(base_uri)
+      @rules   = {}
+      rules.each_with_index do |(regexp, base_uri), i|
+        @rules[Regexp.compile(regexp)] = i
+        @clients[i] = GrowthForecast::Client.new(base_uri)
       end
-      @num_instances = base_uris.size
     end
 
     def debug=(flag)
@@ -27,7 +28,7 @@ module Mg
     end
 
     def client(path)
-      @last_client = @clients[id(path, @num_instances)]
+      @last_client = @clients[id(path)]
     end
 
     def last_client

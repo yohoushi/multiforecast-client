@@ -28,5 +28,5 @@ def base_uri
 end
 
 def client
-  Mg::Client.new([base_uri])
+  Mg::Client.new({'.*' => base_uri})
 end

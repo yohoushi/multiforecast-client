@@ -18,9 +18,11 @@ module Mg
       CGI.unescape(graph_name)
     end
 
-    def id(path, num_instances)
-      # ToDo (complex graph ...)
-      path.bytes.inject(:+) % num_instances
+    def id(path)
+      @rules.each do |regexp, id|
+        return id if path =~ regexp
+      end
+      return 0
     end
   end
 end
