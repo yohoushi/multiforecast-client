@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Mg::Client do
   include Mg::ConversionRule
-  include_context "setup_mgclient"
+  include_context "setup_graph"
   id_keys      = %w[gfuri path id service_name section_name graph_name]
   graph_keys   = %w[number llimit mode stype adjustval gmode color created_at ulimit description
                    sulimit unit sort updated_at adjust type sllimit meta md5]
@@ -65,22 +65,23 @@ describe Mg::Client do
     end
   end
 
-  context "#create_complex" do
-    include_context "stub_create_complex" if ENV['MOCK'] == 'on'
-    include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
-    subject { mgclient.create_complex(from_graphs, to_complex) }
-    it { subject["error"].should == 0 }
-    after { mgclient.delete_complex(to_complex["path"]) }
-  end
+  describe "complex" do
+    context "#create_complex" do
+      include_context "stub_create_complex" if ENV['MOCK'] == 'on'
+      include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
+      let(:from_graphs) { graphs }
+      let(:to_complex) { { 'path' => 'cerate_complex_test' } }
+      subject { mgclient.create_complex(from_graphs, to_complex) }
+      it { subject["error"].should == 0 }
+      after { mgclient.delete_complex(to_complex["path"]) }
+    end
 
-  context "#get_complex" do
-    include_context "stub_create_complex" if ENV['MOCK'] == 'on'
-    include_context "stub_get_complex" if ENV['MOCK'] == 'on'
-    include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
-    before { mgclient.create_complex(from_graphs, to_complex) }
-    subject { mgclient.get_complex(to_complex['path']) }
-    complex_keys.each {|key| it { subject.should have_key(key) } }
-    after { mgclient.delete_complex(to_complex["path"]) }
+    context "#get_complex" do
+      include_context "setup_complex"
+      include_context "stub_get_complex" if ENV['MOCK'] == 'on'
+      subject { mgclient.get_complex(to_complex['path']) }
+      complex_keys.each {|key| it { subject.should have_key(key) } }
+    end
   end
 end
 

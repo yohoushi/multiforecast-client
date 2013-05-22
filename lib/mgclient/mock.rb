@@ -3,11 +3,11 @@ require 'mgclient/mock/setup.rb'
 require 'mgclient/mock/mock.rb'
 
 def e(str)
-  URI.escape(str) if str
+  CGI.escape(str) if str
 end
 
 def gfpath(path)
-  URI.escape("#{service_name(path)}/#{section_name(path)}/#{graph_name(path)}")
+  "#{e service_name(path)}/#{e section_name(path)}/#{e graph_name(path)}"
 end
 
 def base_uri

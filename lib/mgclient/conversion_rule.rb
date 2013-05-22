@@ -27,7 +27,6 @@ module Mg
     end
 
     def ids(path)
-      binding.pry
       @rules.each_with_object([]) do |(dir, id), ids|
         ids << id if path.index(dir) == 0
       end
