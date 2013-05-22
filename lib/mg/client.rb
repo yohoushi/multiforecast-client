@@ -13,12 +13,14 @@ module Mg
 
     # @param [String] rules
     #   dir path => growthforecast base_uri
-    def initialize(rules = { '' => 'http://locahost:5125' })
+    def initialize(rules = [{dir: '', gfuri: 'http://locahost:5125'}])
       @clients = []
       @rules   = {}
-      rules.each_with_index do |(dir, base_uri), i|
+      rules = rules.kind_of?(Array) ? rules : [rules]
+      rules.each_with_index do |rule, i|
+        dir, gfuri = rule[:dir], rule[:gfuri]
         @rules[dir] = i
-        @clients[i] = GrowthForecast::Client.new(base_uri)
+        @clients[i] = GrowthForecast::Client.new(gfuri)
       end
     end
 
