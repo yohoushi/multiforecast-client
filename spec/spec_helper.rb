@@ -4,7 +4,7 @@ require "bundler/setup"
 ENV['MOCK'] ||= 'on'
 require "pry"
 require 'mgclient'
-require 'mgclient/mock'
+require 'mgclient/shared_context'
 require 'webmock/rspec'
 WebMock.allow_net_connect! if ENV['MOCK'] == 'off'
 
