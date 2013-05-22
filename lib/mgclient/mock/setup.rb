@@ -1,9 +1,12 @@
 # -*- encoding: utf-8 -*-
-shared_context "setup_graph" do
+shared_context "let_graph" do
   include_context "stub_list_graph" if ENV['MOCK'] == 'on'
   let(:graphs) { mgclient.list_graph }
   let(:graph) { graphs.first }
+end
 
+shared_context "setup_graph" do
+  include_context "let_graph"
   include_context "stub_post_graph" if ENV['MOCK'] == 'on'
   include_context "stub_delete_graph" if ENV['MOCK'] == 'on'
   before(:all) {
@@ -18,12 +21,22 @@ shared_context "setup_graph" do
   }
 end
 
-shared_context "setup_complex" do
+shared_context "let_complex" do
   include_context "setup_graph"
   let(:from_graphs) do
     [
-      graphs[0],
-      graphs[1],
+      {
+        "path" => graphs[0]["path"],
+        "gmode" => "gauge",
+        "stack" => false,
+        "type" => "AREA",
+      },
+      {
+        "path" => graphs[1]["path"],
+        "gmode" => "gauge",
+        "stack" => false,
+        "type" => "AREA"
+      },
     ]
   end
   let(:to_complex) do
@@ -33,7 +46,10 @@ shared_context "setup_complex" do
       "sort"         => 10
     }
   end
+end
 
+shared_context "setup_complex" do
+  include_context "let_complex"
   include_context "stub_create_complex" if ENV['MOCK'] == 'on'
   include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
   before do
@@ -44,4 +60,3 @@ shared_context "setup_complex" do
     mgclient.delete_complex(to_complex["path"]) rescue nil
   end
 end
-

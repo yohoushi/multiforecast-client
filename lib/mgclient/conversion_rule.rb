@@ -12,11 +12,11 @@ module Mg
     end
 
     def graph_name(path)
-      ::CGI.escape(path)
+      ::CGI.escape(path).gsub('+', '%20')
     end
 
     def path(service_name, section_name, graph_name)
-      ::CGI.unescape(graph_name)
+      ::CGI.unescape(graph_name.gsub('%20', '+'))
     end
 
     def id(path)

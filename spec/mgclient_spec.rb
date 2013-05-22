@@ -66,21 +66,24 @@ describe Mg::Client do
   end
 
   describe "complex" do
-    context "#create_complex" do
-      include_context "stub_create_complex" if ENV['MOCK'] == 'on'
-      include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
-      let(:from_graphs) { graphs }
-      let(:to_complex) { { 'path' => 'cerate_complex_test' } }
-      subject { mgclient.create_complex(from_graphs, to_complex) }
-      it { subject["error"].should == 0 }
-      after { mgclient.delete_complex(to_complex["path"]) }
+    describe "before create" do
+      include_context "let_complex"
+      context "#create_complex" do
+        include_context "stub_create_complex" if ENV['MOCK'] == 'on'
+        include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
+        subject { mgclient.create_complex(from_graphs, to_complex) }
+        it { subject["error"].should == 0 }
+        after { mgclient.delete_complex(to_complex["path"]) }
+      end
     end
 
-    context "#get_complex" do
+    describe "after create" do
       include_context "setup_complex"
-      include_context "stub_get_complex" if ENV['MOCK'] == 'on'
-      subject { mgclient.get_complex(to_complex['path']) }
-      complex_keys.each {|key| it { subject.should have_key(key) } }
+      context "#get_complex" do
+        include_context "stub_get_complex" if ENV['MOCK'] == 'on'
+        subject { mgclient.get_complex(to_complex['path']) }
+        complex_keys.each {|key| it { subject.should have_key(key) } }
+      end
     end
   end
 end

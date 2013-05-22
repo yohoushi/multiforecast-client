@@ -3,7 +3,7 @@ require 'mgclient/mock/setup.rb'
 require 'mgclient/mock/mock.rb'
 
 def e(str)
-  CGI.escape(str) if str
+  CGI.escape(str).gsub('+', '%20') if str
 end
 
 def gfpath(path)
