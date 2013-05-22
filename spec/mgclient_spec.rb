@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Mg::Client do
-  include Mg::ConversionRule
   include_context "setup_graph"
   id_keys      = %w[gfuri path id service_name section_name graph_name]
   graph_keys   = %w[number llimit mode stype adjustval gmode color created_at ulimit description

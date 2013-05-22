@@ -2,6 +2,8 @@ require 'mgclient'
 require 'mgclient/shared_context/setup.rb' 
 require 'mgclient/shared_context/mock.rb'
 
+include Mg::ConversionRule
+
 def e(str)
   CGI.escape(str).gsub('+', '%20') if str
 end
