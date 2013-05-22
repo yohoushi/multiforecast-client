@@ -1,3 +1,2 @@
-require 'mg/conversion_rule'
-require 'mg/client'
-
+require 'mgclient/conversion_rule'
+require 'mgclient/client'

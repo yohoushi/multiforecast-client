@@ -18,7 +18,7 @@ describe Mg::Client do
 
   context "#get_graph" do
     include_context "stub_get_graph" if ENV['MOCK'] == 'on'
-    subject { client.get_graph(graph["path"]) }
+    subject { mgclient.get_graph(graph["path"]) }
     id_keys.each {|key| it { subject[key].should == graph[key] } }
     graph_keys.each {|key| it { subject.should have_key(key) } }
   end
@@ -29,7 +29,7 @@ describe Mg::Client do
     params = {
       'number' => 0,
     }
-    subject { client.post_graph(graph["path"], params) }
+    subject { mgclient.post_graph(graph["path"], params) }
     it { subject["error"].should == 0 }
     params.keys.each {|key| it { subject["data"][key].should == params[key] } }
   end
@@ -38,8 +38,8 @@ describe Mg::Client do
     include_context "stub_post_graph" if ENV['MOCK'] == 'on'
     include_context "stub_delete_graph" if ENV['MOCK'] == 'on'
     let(:graph) { { 'path' => "app name/host name/delete:test" } }
-    before  { client.post_graph(graph['path'], { 'number' => 0 }) }
-    subject { client.delete_graph(graph['path']) }
+    before  { mgclient.post_graph(graph['path'], { 'number' => 0 }) }
+    subject { mgclient.delete_graph(graph['path']) }
     it { subject["error"].should == 0 }
   end
 
@@ -53,9 +53,9 @@ describe Mg::Client do
       'color'  => "#000000"
     }
     before do
-      @before = client.get_graph(graph["path"])
-      @response = client.edit_graph(graph["path"], params)
-      @after = client.get_graph(graph["path"])
+      @before = mgclient.get_graph(graph["path"])
+      @response = mgclient.edit_graph(graph["path"], params)
+      @after = mgclient.get_graph(graph["path"])
     end
     it { @response["error"].should == 0 }
     # @todo: how to stub @after?
@@ -68,19 +68,19 @@ describe Mg::Client do
   context "#create_complex" do
     include_context "stub_create_complex" if ENV['MOCK'] == 'on'
     include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
-    subject { client.create_complex(from_graphs, to_complex) }
+    subject { mgclient.create_complex(from_graphs, to_complex) }
     it { subject["error"].should == 0 }
-    after { client.delete_complex(to_complex["path"]) }
+    after { mgclient.delete_complex(to_complex["path"]) }
   end
 
   context "#get_complex" do
     include_context "stub_create_complex" if ENV['MOCK'] == 'on'
     include_context "stub_get_complex" if ENV['MOCK'] == 'on'
     include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
-    before { client.create_complex(from_graphs, to_complex) }
-    subject { client.get_complex(to_complex['path']) }
+    before { mgclient.create_complex(from_graphs, to_complex) }
+    subject { mgclient.get_complex(to_complex['path']) }
     complex_keys.each {|key| it { subject.should have_key(key) } }
-    after { client.delete_complex(to_complex["path"]) }
+    after { mgclient.delete_complex(to_complex["path"]) }
   end
 end
 
