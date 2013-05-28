@@ -260,7 +260,7 @@ module Mg
     # @return [Hash]  error response
     # @example
     def get_graph_uri(path, unit = 'h')
-      "#{client(path).base_uri}/graph/#{service_name(path)}/#{section_name(path)}/#{graph_name(path)}?t=#{unit}"
+      "#{client(path).base_uri}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?t=#{unit}"
     end
 
     # Get complex graph image uri
@@ -269,7 +269,7 @@ module Mg
     # @return [Hash]  error response
     # @example
     def get_complex_uri(path, unit = 'h')
-      "#{client(path).base_uri}/complex/graph/#{service_name(path)}/#{section_name(path)}/#{graph_name(path)}?t=#{unit}"
+      "#{client(path).base_uri}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?t=#{unit}"
     end
   end
 end
