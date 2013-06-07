@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
-require 'mgclient'
+require 'multiforecast-client'
 require 'pp'
 
 ### Create a Multi GrowthForecast Client, the parameter is balancing rule and the base URI of GrowthForecast
 ### dirpath => GrowthForecast
-client = Mg::Client.new({
+client = MultiForecast::Client.new({
   'app1/' => 'http://localhost:5125',
   'app2/' => 'http://localhost:5000',
 })
@@ -21,11 +21,11 @@ pp client.post_graph('app2/2xx_count', { 'number' => 0 }) #=>
 #    "stype"=>"AREA",
 #    "adjustval"=>"1",
 #    "meta"=>"",
-#    "service_name"=>"mgclient",
+#    "service_name"=>"mfclient",
 #    "gmode"=>"gauge",
 #    "color"=>"#33cc99",
 #    "created_at"=>"2013/05/20 17:57:57",
-#    "section_name"=>"mgclient",
+#    "section_name"=>"mfclient",
 #    "ulimit"=>1000000000,
 #    "id"=>2,
 #    "graph_name"=>"app2%2F2xx_count",
@@ -42,20 +42,20 @@ pp client.post_graph('app2/2xx_count', { 'number' => 0 }) #=>
 pp 'List graphs. All graphs from multiple growthforecasts are shown'
 pp client.list_graph #=>
 # [{"graph_name"=>"app1%2F3xx_count",
-#   "service_name"=>"mgclient",
-#   "section_name"=>"mgclient",
+#   "service_name"=>"mfclient",
+#   "section_name"=>"mfclient",
 #   "id"=>2,
 #   "gfuri"=>"http://localhost:5125",
 #   "path"=>"app1/3xx_count"},
 #  {"graph_name"=>"app1%2F2xx_count",
-#   "service_name"=>"mgclient",
-#   "section_name"=>"mgclient",
+#   "service_name"=>"mfclient",
+#   "section_name"=>"mfclient",
 #   "id"=>1,
 #   "gfuri"=>"http://localhost:5125",
 #   "path"=>"app1/2xx_count"},
-#  {"service_name"=>"mgclient",
+#  {"service_name"=>"mfclient",
 #   "graph_name"=>"app2%2F2xx_count",
-#   "section_name"=>"mgclient",
+#   "section_name"=>"mfclient",
 #   "id"=>2,
 #   "gfuri"=>"http://localhost:5000",
 #   "path"=>"app2/2xx_count"}]
@@ -63,14 +63,14 @@ pp client.list_graph #=>
 pp 'List graphs by filtering by dirpath app1/'
 pp client.list_graph('app1/') #=>
 # [{"graph_name"=>"app1%2F3xx_count",
-#   "service_name"=>"mgclient",
-#   "section_name"=>"mgclient",
+#   "service_name"=>"mfclient",
+#   "section_name"=>"mfclient",
 #   "id"=>2,
 #   "gfuri"=>"http://localhost:5125",
 #   "path"=>"app1/3xx_count"},
 #  {"graph_name"=>"app1%2F2xx_count",
-#   "service_name"=>"mgclient",
-#   "section_name"=>"mgclient",
+#   "service_name"=>"mfclient",
+#   "section_name"=>"mfclient",
 #   "id"=>1,
 #   "gfuri"=>"http://localhost:5125",
 #   "path"=>"app1/2xx_count"}]
@@ -83,11 +83,11 @@ pp client.get_graph('app2/2xx_count') #=>
 #  "stype"=>"AREA",
 #  "adjustval"=>"1",
 #  "meta"=>"",
-#  "service_name"=>"mgclient",
+#  "service_name"=>"mfclient",
 #  "gmode"=>"gauge",
 #  "color"=>"#33cc99",
 #  "created_at"=>"2013/05/20 17:57:57",
-#  "section_name"=>"mgclient",
+#  "section_name"=>"mfclient",
 #  "ulimit"=>1000000000,
 #  "id"=>2,
 #  "graph_name"=>"app2%2F2xx_count",
@@ -105,11 +105,11 @@ pp client.get_graph('app2/2xx_count') #=>
 
 pp 'Get a graph image uri'
 pp client.get_graph_uri('app2/2xx_count', '3h') #=>
-# "http://localhost:5125/graph/mgclient/mgclient/app1%2F2xx_count?t=3h"
+# "http://localhost:5125/graph/mfclient/mfclient/app1%2F2xx_count?t=3h"
 
 pp 'Delete a complex graph'
 pp client.delete_graph('app2/2xx_count') #=>
-# {"location"=>"http://localhost:5000/list/mgclient/mgclient", "error"=>0}
+# {"location"=>"http://localhost:5000/list/mfclient/mfclient", "error"=>0}
 
 pp 'Create a complex graph'
 # Source graphs of a complex graph must exist on *a* GrowthForecast
@@ -123,15 +123,15 @@ to_complex = {
   "sort"         => 10,
 }
 pp client.create_complex(from_graphs, to_complex) #=>
-# {"location"=>"http://localhost:5125/list/mgclient/mgclient", "error"=>0}
+# {"location"=>"http://localhost:5125/list/mfclient/mfclient", "error"=>0}
 
 pp 'Get a complex graph'
 pp client.get_complex(to_complex['path']) #=>
 # {"number"=>0,
 #  "complex"=>true,
 #  "created_at"=>"2013/05/20 18:00:09",
-#  "service_name"=>"mgclient",
-#  "section_name"=>"mgclient",
+#  "service_name"=>"mfclient",
+#  "section_name"=>"mfclient",
 #  "id"=>1,
 #  "graph_name"=>"app1%2Fcomplex",
 #  "data"=>
@@ -146,16 +146,16 @@ pp client.get_complex(to_complex['path']) #=>
 
 pp 'Get a complex graph image uri'
 pp client.get_complex_uri(to_complex['path'], '3h') #=>
-# "http://localhost:5125/complex/graph/mgclient/mgclient/app1%2Fcomplex?t=3h"
+# "http://localhost:5125/complex/graph/mfclient/mfclient/app1%2Fcomplex?t=3h"
 
 pp 'List complex graphs'
 pp client.list_complex #=>
-# [{"service_name"=>"mgclient", "graph_name"=>"app1%2Fcomplex", "section_name"=>"mgclient", "id"=>1, "gfuri"=>"http://localhost:5125", "path"=>"app1/complex"}]
+# [{"service_name"=>"mfclient", "graph_name"=>"app1%2Fcomplex", "section_name"=>"mfclient", "id"=>1, "gfuri"=>"http://localhost:5125", "path"=>"app1/complex"}]
 
 pp 'List complex graphs by filetering by dirpath app1/'
 pp client.list_complex('app1/')
 
 pp 'Delete a complex graph'
 pp client.delete_complex(to_complex['path']) #=>
-# {"location"=>"http://localhost:5125/list/mgclient/mgclient", "error"=>0}
+# {"location"=>"http://localhost:5125/list/mfclient/mfclient", "error"=>0}
 

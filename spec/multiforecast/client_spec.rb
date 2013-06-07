@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Mg::Client do
+describe MultiForecast::Client do
   include_context "setup_graph"
   id_keys      = %w[gfuri path id service_name section_name graph_name]
   graph_keys   = %w[number llimit mode stype adjustval gmode color created_at ulimit description
@@ -17,7 +17,7 @@ describe Mg::Client do
 
   context "#get_graph" do
     include_context "stub_get_graph" if ENV['MOCK'] == 'on'
-    subject { mgclient.get_graph(graph["path"]) }
+    subject { mfclient.get_graph(graph["path"]) }
     id_keys.each {|key| it { subject[key].should == graph[key] } }
     graph_keys.each {|key| it { subject.should have_key(key) } }
   end
@@ -28,7 +28,7 @@ describe Mg::Client do
     params = {
       'number' => 0,
     }
-    subject { mgclient.post_graph(graph["path"], params) }
+    subject { mfclient.post_graph(graph["path"], params) }
     it { subject["error"].should == 0 }
     params.keys.each {|key| it { subject["data"][key].should == params[key] } }
   end
@@ -37,8 +37,8 @@ describe Mg::Client do
     include_context "stub_post_graph" if ENV['MOCK'] == 'on'
     include_context "stub_delete_graph" if ENV['MOCK'] == 'on'
     let(:graph) { { 'path' => "app name/host name/delete:test" } }
-    before  { mgclient.post_graph(graph['path'], { 'number' => 0 }) }
-    subject { mgclient.delete_graph(graph['path']) }
+    before  { mfclient.post_graph(graph['path'], { 'number' => 0 }) }
+    subject { mfclient.delete_graph(graph['path']) }
     it { subject["error"].should == 0 }
   end
 
@@ -52,9 +52,9 @@ describe Mg::Client do
       'color'  => "#000000"
     }
     before do
-      @before = mgclient.get_graph(graph["path"])
-      @response = mgclient.edit_graph(graph["path"], params)
-      @after = mgclient.get_graph(graph["path"])
+      @before = mfclient.get_graph(graph["path"])
+      @response = mfclient.edit_graph(graph["path"], params)
+      @after = mfclient.get_graph(graph["path"])
     end
     it { @response["error"].should == 0 }
     # @todo: how to stub @after?
@@ -70,9 +70,9 @@ describe Mg::Client do
       context "#create_complex" do
         include_context "stub_create_complex" if ENV['MOCK'] == 'on'
         include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
-        subject { mgclient.create_complex(from_graphs, to_complex) }
+        subject { mfclient.create_complex(from_graphs, to_complex) }
         it { subject["error"].should == 0 }
-        after { mgclient.delete_complex(to_complex["path"]) }
+        after { mfclient.delete_complex(to_complex["path"]) }
       end
     end
 
@@ -80,7 +80,7 @@ describe Mg::Client do
       include_context "setup_complex"
       context "#get_complex" do
         include_context "stub_get_complex" if ENV['MOCK'] == 'on'
-        subject { mgclient.get_complex(to_complex['path']) }
+        subject { mfclient.get_complex(to_complex['path']) }
         complex_keys.each {|key| it { subject.should have_key(key) } }
       end
     end

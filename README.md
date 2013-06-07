@@ -1,10 +1,10 @@
-# mgclient
+# multiforecast-client
 
 testing ruby: 1.9.3; GrowthForecast: > 0.70?
 
-## About mgclient
+## About multiforecast-client
 
-`mgclient` is a Multiple GrowthForecast Client. 
+`multiforecast-client` is a Multiple GrowthForecast Client. 
 
 Features
 
@@ -15,7 +15,7 @@ Features
 
 ## USAGE
 
-    gem install mgclient
+    gem install multiforecast-client
 
 See [examples](./examples) directory.
 
