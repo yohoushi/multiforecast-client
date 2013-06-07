@@ -4,7 +4,7 @@ require 'cgi'
 module MultiForecast
   module ConversionRule
     def service_name(path = nil)
-      'mgclient'
+      'mfclient'
     end
 
     def section_name(path = nil)
