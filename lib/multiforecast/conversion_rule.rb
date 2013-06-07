@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 require 'cgi'
 
-module Mg
+module MultiForecast
   module ConversionRule
     def service_name(path = nil)
       'mgclient'

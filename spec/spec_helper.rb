@@ -3,8 +3,8 @@ require "bundler/setup"
 
 ENV['MOCK'] ||= 'on'
 require "pry"
-require 'mgclient'
-require 'mgclient/shared_context'
+require 'multiforecast-client'
+require 'multiforecast/shared_context'
 require 'webmock/rspec'
 WebMock.allow_net_connect! if ENV['MOCK'] == 'off'
 

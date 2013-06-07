@@ -2,11 +2,11 @@
 # encoding: utf-8
 
 Gem::Specification.new do |gem|
-  gem.name          = 'mgclient'
+  gem.name          = 'multiforecast-client'
   gem.version       = File.read(File.expand_path('VERSION', File.dirname(__FILE__))).chomp
   gem.authors       = ["Naotoshi Seo"]
   gem.email         = ["sonots@gmail.com"]
-  gem.homepage      = "https://github.com/sonots/mgclient"
+  gem.homepage      = "https://github.com/sonots/multiforecast-client"
   gem.summary       = "Multiple GrowthForecast Client"
   gem.description   = gem.summary
 

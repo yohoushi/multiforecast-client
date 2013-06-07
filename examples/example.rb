@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
-require 'mgclient'
+require 'multiforecast-client'
 require 'pp'
 
 ### Create a Multi GrowthForecast Client, the parameter is balancing rule and the base URI of GrowthForecast
 ### dirpath => GrowthForecast
-client = Mg::Client.new({
+client = MultiForecast::Client.new({
   'app1/' => 'http://localhost:5125',
   'app2/' => 'http://localhost:5000',
 })

@@ -1,13 +1,13 @@
 # -*- encoding: utf-8 -*-
 require 'growthforecast-client'
 
-module Mg
+module MultiForecast
   class Error < StandardError; end
   class NotFound < Error; end
   class AlreadyExists < Error; end
 
   class Client
-    include ::Mg::ConversionRule
+    include ::MultiForecast::ConversionRule
     attr_accessor :clients
     attr_accessor :debug
 
