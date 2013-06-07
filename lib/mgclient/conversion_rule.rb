@@ -8,15 +8,18 @@ module Mg
     end
 
     def section_name(path = nil)
-      'mgclient'
+      # + => '%20' is to avoid GF (Kossy?) bug
+      CGI.escape(File.dirname(path)).gsub('+', '%20')
     end
 
     def graph_name(path)
-      ::CGI.escape(path).gsub('+', '%20')
+      CGI.escape(File.basename(path)).gsub('+', '%20')
     end
 
     def path(service_name, section_name, graph_name)
-      ::CGI.unescape(graph_name.gsub('%20', '+'))
+      dirname = CGI.unescape(section_name.gsub('%20', '+'))
+      basename = CGI.unescape(graph_name.gsub('%20', '+'))
+      dirname == "." ? basename : "#{dirname}/#{basename}"
     end
 
     def id(path)
