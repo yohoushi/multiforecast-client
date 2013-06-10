@@ -257,20 +257,74 @@ module MultiForecast
     # Get graph image uri
     #
     # @param [String] path
+    # @param [Hash] params for the query string
     # @return [Hash]  error response
     # @example
-    def get_graph_uri(path, unit = 'h')
-      "#{client(path).base_uri}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?t=#{unit}"
+    def get_graph_uri(path, unit = 'h', params = {})
+      params.merge!('t' => unit)
+      "#{client(path).base_uri}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
+    end
+
+    # Get custom graph image uri
+    #
+    # @param [String] path
+    # @param [Time] from
+    # @param [Time] to
+    # @param [Integer] width
+    # @param [Integer] height
+    # @return [Hash]  error response
+    # @example
+    def get_custom_graph_uri(path, from, to, width, height)
+      params = {
+        'from'   => from.to_s,
+        'to'     => to.to_s,
+        'width'  => width.to_s,
+        'height' => height.to_s,
+      }
+      get_graph_uri(path, 'c', params)
     end
 
     # Get complex graph image uri
     #
     # @param [String] path
+    # @param [Hash] params for the query string
     # @return [Hash]  error response
     # @example
-    def get_complex_uri(path, unit = 'h')
-      "#{client(path).base_uri}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?t=#{unit}"
+    def get_complex_uri(path, unit = 'h', params = {})
+      params.merge!('t' => unit)
+      "#{client(path).base_uri}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
     end
+
+    # Get custom complex graph image uri
+    #
+    # @param [String] path
+    # @param [Time] from
+    # @param [Time] to
+    # @param [Integer] width
+    # @param [Integer] height
+    # @return [Hash]  error response
+    # @example
+    def get_custom_complex_uri(path, from, to, width, height)
+      params = {
+        'from'   => from.to_s,
+        'to'     => to.to_s,
+        'width'  => width.to_s,
+        'height' => height.to_s,
+      }
+      get_complex_uri(path, 'c', params)
+    end
+
+    private
+
+    # build URI query string
+    #
+    # @param [Hash] param
+    # @return [String] query string
+    # @example
+    def query_string(params)
+      params.keys.collect{|key| "#{URI.escape(key)}=#{URI.escape(params[key])}" }.join('&')
+    end
+
   end
 end
 
