@@ -63,6 +63,19 @@ describe MultiForecast::Client do
       params.keys.each {|key| it { @after[key].should == params[key] } }
     end
   end
+  
+  context "#get_custom_graph_uri" do
+    let!(:from) { Time.now - 360 }
+    let!(:to)   { Time.now }
+    height = 300
+    width = 500
+    subject { mfclient.get_custom_graph_uri(graph["path"], from, to, width, height) }
+    it { subject.should match(/(\?|&)t=c(&|$)/) }
+    it { subject.should match(/(\?|&)from=#{Regexp.escape(URI.escape(from.to_s))}(&|$)/) }
+    it { subject.should match(/(\?|&)to=#{Regexp.escape(URI.escape(to.to_s))}(&|$)/) }
+    it { subject.should match(/(\?|&)height=#{height}(&|$)/) }
+    it { subject.should match(/(\?|&)width=#{width}(&|$)/) }
+  end
 
   describe "complex" do
     describe "before create" do
@@ -82,6 +95,19 @@ describe MultiForecast::Client do
         include_context "stub_get_complex" if ENV['MOCK'] == 'on'
         subject { mfclient.get_complex(to_complex['path']) }
         complex_keys.each {|key| it { subject.should have_key(key) } }
+      end
+
+      context "#get_custom_complex_uri" do
+        let!(:from) { Time.now - 360 }
+        let!(:to)   { Time.now }
+        height = 300
+        width = 500
+        subject { mfclient.get_custom_complex_uri(graph["path"], from, to, width, height) }
+        it { subject.should match(/(\?|&)t=c(&|$)/) }
+        it { subject.should match(/(\?|&)from=#{Regexp.escape(URI.escape(from.to_s))}(&|$)/) }
+        it { subject.should match(/(\?|&)to=#{Regexp.escape(URI.escape(to.to_s))}(&|$)/) }
+        it { subject.should match(/(\?|&)height=#{height}(&|$)/) }
+        it { subject.should match(/(\?|&)width=#{width}(&|$)/) }
       end
     end
   end
