@@ -278,8 +278,8 @@ module MultiForecast
     # @example
     def get_custom_graph_uri(path, from, to, width, height)
       params = {
-        'from'   => from.to_s,
-        'to'     => to.to_s,
+        'from'   => from.strftime("%F %T %z"),
+        'to'     => to.strftime("%F %T %z"),
         'width'  => width.to_s,
         'height' => height.to_s,
       }
@@ -309,8 +309,8 @@ module MultiForecast
     # @example
     def get_custom_complex_uri(path, from, to, width, height)
       params = {
-        'from'   => from.to_s,
-        'to'     => to.to_s,
+        'from'   => from.strftime("%F %T %z"),
+        'to'     => to.strftime("%F %T %z"),
         'width'  => width.to_s,
         'height' => height.to_s,
       }
