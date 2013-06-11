@@ -8,5 +8,6 @@ Gemfile.lock
 .ruby-version
 vendor
 doc/*
+tags
 tmp/*
 .yardoc

@@ -10,6 +10,7 @@ module MultiForecast
     include ::MultiForecast::ConversionRule
     attr_accessor :clients
     attr_accessor :debug
+    attr_accessor :short_metrics
 
     # @param [String] rules
     #   dir path => growthforecast base_uri
@@ -22,6 +23,7 @@ module MultiForecast
         @rules[dir] = i
         @clients[i] = GrowthForecast::Client.new(gfuri)
       end
+      @short_metrics = true
     end
 
     def debug=(flag)
@@ -257,20 +259,88 @@ module MultiForecast
     # Get graph image uri
     #
     # @param [String] path
+    # @param [Hash] params for the query string
     # @return [Hash]  error response
     # @example
-    def get_graph_uri(path, unit = 'h')
-      "#{client(path).base_uri}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?t=#{unit}"
+    def get_graph_uri(path, unit = 'h', params = {})
+      params.merge!('t' => unit)
+      "#{client(path).base_uri}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
+    end
+
+    # Get custom graph image uri
+    #
+    # @param [String] path
+    # @param [Time] from
+    # @param [Time] to
+    # @param [Integer] width
+    # @param [Integer] height
+    # @return [Hash]  error response
+    # @example
+    def get_custom_graph_uri(path, from, to, width, height)
+      params = {
+        'from'   => from.strftime("%F %T %z"),
+        'to'     => to.strftime("%F %T %z"),
+        'width'  => width.to_s,
+        'height' => height.to_s,
+      }
+      unit = choose_unit(from)
+      get_graph_uri(path, unit, params)
     end
 
     # Get complex graph image uri
     #
     # @param [String] path
+    # @param [Hash] params for the query string
     # @return [Hash]  error response
     # @example
-    def get_complex_uri(path, unit = 'h')
-      "#{client(path).base_uri}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?t=#{unit}"
+    def get_complex_uri(path, unit = 'h', params = {})
+      params.merge!('t' => unit)
+      "#{client(path).base_uri}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
     end
+
+    # Get custom complex graph image uri
+    #
+    # @param [String] path
+    # @param [Time] from
+    # @param [Time] to
+    # @param [Integer] width
+    # @param [Integer] height
+    # @return [Hash]  error response
+    # @example
+    def get_custom_complex_uri(path, from, to, width, height)
+      params = {
+        'from'   => from.strftime("%F %T %z"),
+        'to'     => to.strftime("%F %T %z"),
+        'width'  => width.to_s,
+        'height' => height.to_s,
+      }
+      unit = choose_unit(from)
+      get_complex_uri(path, unit, params)
+    end
+
+    private
+
+    # build URI query string
+    #
+    # @param [Hash] param
+    # @return [String] query string
+    # @example
+    def query_string(params)
+      params.keys.collect{|key| "#{URI.escape(key)}=#{URI.escape(params[key])}" }.join('&')
+    end
+
+    # Choose unit type
+    # @param [Time] from start date time of the graph
+    # @return [String] 'c' or 'sc'
+    def choose_unit(from)
+      # if from is more future than 3 days ago
+      if @short_metrics && from > Time.now - 60 * 60 * 24 * 3 
+        'sc'
+      else
+        'c'
+      end
+    end
+
   end
 end
 

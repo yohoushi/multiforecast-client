@@ -5,6 +5,7 @@ ENV['MOCK'] ||= 'on'
 require "pry"
 require 'multiforecast-client'
 require 'multiforecast/shared_context'
+require 'multiforecast/shared_examples'
 require 'webmock/rspec'
 WebMock.allow_net_connect! if ENV['MOCK'] == 'off'
 
