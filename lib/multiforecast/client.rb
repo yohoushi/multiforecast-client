@@ -13,7 +13,7 @@ module MultiForecast
 
     # @param [String] rules
     #   dir path => growthforecast base_uri
-    def initialize(rules = [{dir: '', gfuri: 'http://locahost:5125'}])
+    def initialize(rules = [{dir: '', gfuri: 'http://locahost:5125'}], short_metrics = true)
       @clients = []
       @rules   = {}
       rules = rules.kind_of?(Array) ? rules : [rules]
@@ -22,6 +22,7 @@ module MultiForecast
         @rules[dir] = i
         @clients[i] = GrowthForecast::Client.new(gfuri)
       end
+      @short_metrics = short_metrics
     end
 
     def debug=(flag)
@@ -281,7 +282,8 @@ module MultiForecast
         'width'  => width.to_s,
         'height' => height.to_s,
       }
-      get_graph_uri(path, 'c', params)
+      unit = choose_unit(from)
+      get_graph_uri(path, unit, params)
     end
 
     # Get complex graph image uri
@@ -311,7 +313,8 @@ module MultiForecast
         'width'  => width.to_s,
         'height' => height.to_s,
       }
-      get_complex_uri(path, 'c', params)
+      unit = choose_unit(from)
+      get_complex_uri(path, unit, params)
     end
 
     private
@@ -323,6 +326,18 @@ module MultiForecast
     # @example
     def query_string(params)
       params.keys.collect{|key| "#{URI.escape(key)}=#{URI.escape(params[key])}" }.join('&')
+    end
+
+    # Choose unit type
+    # @param [Time] from start date time of the graph
+    # @return [String] 'c' or 'sc'
+    def choose_unit(from)
+      # if from is more future than 3 days ago
+      if @short_metrics && from > Time.now - 60 * 60 * 24 * 3 
+        'sc'
+      else
+        'c'
+      end
     end
 
   end
