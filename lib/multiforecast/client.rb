@@ -10,10 +10,11 @@ module MultiForecast
     include ::MultiForecast::ConversionRule
     attr_accessor :clients
     attr_accessor :debug
+    attr_accessor :short_metrics
 
     # @param [String] rules
     #   dir path => growthforecast base_uri
-    def initialize(rules = [{dir: '', gfuri: 'http://locahost:5125'}], short_metrics = true)
+    def initialize(rules = [{dir: '', gfuri: 'http://locahost:5125'}])
       @clients = []
       @rules   = {}
       rules = rules.kind_of?(Array) ? rules : [rules]
@@ -22,7 +23,7 @@ module MultiForecast
         @rules[dir] = i
         @clients[i] = GrowthForecast::Client.new(gfuri)
       end
-      @short_metrics = short_metrics
+      @short_metrics = true
     end
 
     def debug=(flag)

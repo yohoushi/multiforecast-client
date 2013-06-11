@@ -65,9 +65,22 @@ describe MultiForecast::Client do
   end
   
   context "#get_custom_graph_uri" do
-    include_context 'let_graph_uri_params'
-    subject { mfclient.get_custom_graph_uri(graph["path"], from, to, width, height) }
-    it_should_behave_like 'custom_graph_uri_params'
+    subject { mfclient_2.get_custom_graph_uri(graph["path"], from, to, width, height) }
+    context "short_metrics is true and short period" do
+      let(:mfclient_2) { mfclient }
+      include_context 'let_graph_uri_params_short'
+      it_should_behave_like 'graph_uri_unit_is_sc'
+    end
+    context "short_metrics is true and long period" do
+      let(:mfclient_2) { mfclient }
+      include_context 'let_graph_uri_params_long'
+      it_should_behave_like 'graph_uri_unit_is_c'
+    end
+    context "short_metrics is false" do
+      let(:mfclient_2) { mfclient.tap{|s| s.short_metrics = false } }
+      include_context 'let_graph_uri_params_short'
+      it_should_behave_like 'graph_uri_unit_is_c'
+    end
   end
 
   describe "complex" do
@@ -91,10 +104,24 @@ describe MultiForecast::Client do
       end
 
       context "#get_custom_complex_uri" do
-        include_context 'let_graph_uri_params'
-        subject { mfclient.get_custom_complex_uri(graph["path"], from, to, width, height) }
-        it_should_behave_like 'custom_graph_uri_params'
+        subject { mfclient_2.get_custom_complex_uri(graph["path"], from, to, width, height) }
+        context "short_metrics is true and short period" do
+          let(:mfclient_2) { mfclient }
+          include_context 'let_graph_uri_params_short'
+          it_should_behave_like 'graph_uri_unit_is_sc'
+        end
+        context "short_metrics is true and long period" do
+          let(:mfclient_2) { mfclient }
+          include_context 'let_graph_uri_params_long'
+          it_should_behave_like 'graph_uri_unit_is_c'
+        end
+        context "short_metrics is false" do
+          let(:mfclient_2) { mfclient.tap{|s| s.short_metrics = false } }
+          include_context 'let_graph_uri_params_short'
+          it_should_behave_like 'graph_uri_unit_is_c'
+        end
       end
+
     end
 
   end
