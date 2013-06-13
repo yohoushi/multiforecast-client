@@ -271,7 +271,7 @@ module MultiForecast
       "#{client(path).base_uri}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
     end
 
-    # Get custom graph image uri in a time period
+    # Get graph image uri in a time period
     #
     # A Helper method
     #
@@ -280,7 +280,7 @@ module MultiForecast
     # @param [Time] to
     # @return [Hash]  error response
     # @example
-    def get_period_graph_uri(path, from, to, params = {})
+    def get_fixedterm_graph_uri(path, from, to, params = {})
       params = params.merge({
         'from' => from.strftime("%F %T %z"),
         'to'   => to.strftime("%F %T %z"),
@@ -313,7 +313,7 @@ module MultiForecast
     # @param [Time] to
     # @return [Hash]  error response
     # @example
-    def get_period_complex_uri(path, from, to, params = {})
+    def get_fixedterm_complex_uri(path, from, to, params = {})
       params = params.merge({
         'from' => from.strftime("%F %T %z"),
         'to'   => to.strftime("%F %T %z"),
