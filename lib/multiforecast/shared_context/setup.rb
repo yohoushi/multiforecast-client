@@ -60,17 +60,3 @@ shared_context "setup_complex" do
     mfclient.delete_complex(to_complex["path"]) rescue nil
   end
 end
-
-shared_context "let_graph_uri_params_short" do
-  let!(:from) { Time.now - 360 }
-  let!(:to)   { Time.now }
-  let!(:width)  { 500 }
-  let!(:height) { 300 }
-end
-
-shared_context "let_graph_uri_params_long" do
-  let!(:from) { Time.now - 60 * 60 * 24 * 4}
-  let!(:to)   { Time.now }
-  let!(:width)  { 500 }
-  let!(:height) { 300 }
-end

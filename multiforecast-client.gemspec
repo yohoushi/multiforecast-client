@@ -24,5 +24,6 @@ Gem::Specification.new do |gem|
 
   # for debug
   gem.add_development_dependency "pry"
+  gem.add_development_dependency "pry-nav"
   gem.add_development_dependency "tapp"
 end
