@@ -92,8 +92,6 @@ describe MultiForecast::Client do
         't' => 'h',
         'width' => 500,
         'height' => 300,
-        'from' => Time.now.strftime("%F %T %z"),
-        'to' => Time.now.strftime("%F %T %z"),
       }
     end
     context "#get_graph_uri" do
@@ -106,53 +104,64 @@ describe MultiForecast::Client do
     end
   end
 
-  describe "fixedterm_graph_uri" do
-    shared_context "short_fixedterm" do
+  describe "graph_uri_fromto" do
+    shared_context "short_period" do
       before { now = Time.now; Time.stub(:now) { now } }
-      let(:from) { Time.now - 60 * 60 * 24 * 2 }
-      let(:to)   { Time.now }
+      let(:params) do
+        {
+          'width' => 500,
+          'height' => 300,
+          'from' => Time.now - 60 * 60 * 24 * 2,
+          'to'   => Time.now,
+        }
+      end
+    end
+    shared_context "long_period" do
+      before { now = Time.now; Time.stub(:now) { now } }
+      let(:params) do
+        {
+          'width' => 500,
+          'height' => 300,
+          'from' => (Time.now - 60 * 60 * 24 * 3).strftime("%F %T %z"),
+          'to'   => Time.now.strftime("%F %T %z"),
+        }
+      end
     end
 
-    shared_context "long_fixedterm" do
-      before { now = Time.now; Time.stub(:now) { now } }
-      let(:from) { Time.now - 60 * 60 * 24 * 3 }
-      let(:to)   { Time.now }
-    end
-
-    context "#get_fixedterm_graph_uri" do
-      subject { mfclient_2.get_fixedterm_graph_uri(graph["path"], from, to) }
-      context "short_metrics is true and short fixedterm" do
+    context "#get_graph_uri" do
+      subject { mfclient_2.get_graph_uri(graph["path"], params) }
+      context "short_metrics is true and short period" do
         let(:mfclient_2) { mfclient }
-        include_context "short_fixedterm"
+        include_context "short_period"
         it_should_behave_like 'graph_uri_short_metrics'
       end
-      context "short_metrics is true and long fixedterm" do
+      context "short_metrics is true and long period" do
         let(:mfclient_2) { mfclient }
-        include_context "long_fixedterm"
+        include_context "long_period"
         it_should_behave_like 'graph_uri_long_metrics'
       end
-      context "short_metrics is false and short fixedterm" do
+      context "short_metrics is false and short period" do
         let(:mfclient_2) { mfclient.tap{|s| s.short_metrics = false } }
-        include_context "short_fixedterm"
+        include_context "short_period"
         it_should_behave_like 'graph_uri_long_metrics'
       end
     end
 
-    context "#get_fixedterm_complex_uri" do
-      subject { mfclient_2.get_fixedterm_complex_uri(graph["path"], from, to) }
-      context "short_metrics is true and short fixedterm" do
+    context "#get_complex_uri" do
+      subject { mfclient_2.get_complex_uri(graph["path"], params) }
+      context "short_metrics is true and short period" do
         let(:mfclient_2) { mfclient }
-        include_context "short_fixedterm"
+        include_context "short_period"
         it_should_behave_like 'graph_uri_short_metrics'
       end
-      context "short_metrics is true and long fixedterm" do
+      context "short_metrics is true and long period" do
         let(:mfclient_2) { mfclient }
-        include_context "long_fixedterm"
+        include_context "long_period"
         it_should_behave_like 'graph_uri_long_metrics'
       end
-      context "short_metrics is false and short fixedterm" do
+      context "short_metrics is false and short period" do
         let(:mfclient_2) { mfclient.tap{|s| s.short_metrics = false } }
-        include_context "short_fixedterm"
+        include_context "short_period"
         it_should_behave_like 'graph_uri_long_metrics'
       end
     end

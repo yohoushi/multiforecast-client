@@ -288,12 +288,12 @@ module MultiForecast
     # @return [Hash]  error response
     # @example
     def get_complex_uri(path, params = {})
-      params = process_time_params(params)
+      params = preprocess_time_params(params)
       "#{client(path).base_uri}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
     end
 
     # process the time params (from and to)
-    def process_time_params(params)
+    def preprocess_time_params(params)
       params = params.dup
       params['from'] = Time.parse(params['from']) if params['from'] and params['from'].kind_of?(String)
       params['to']   = Time.parse(params['to']) if params['to'] and params['to'].kind_of?(String)
