@@ -1,6 +1,6 @@
 # multiforecast-client
 
-testing ruby: 1.9.3; GrowthForecast: > 0.70?
+testing ruby: 1.9.2, 1.9.3, 2.0.0; GrowthForecast: > 0.70?
 
 ## About multiforecast-client
 
