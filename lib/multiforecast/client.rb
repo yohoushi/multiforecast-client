@@ -295,8 +295,8 @@ module MultiForecast
     # process the time params (from and to)
     def preprocess_time_params(params)
       params = params.dup
-      params['from'] = Time.parse(params['from']) if params['from'] and params['from'].kind_of?(String)
-      params['to']   = Time.parse(params['to']) if params['to'] and params['to'].kind_of?(String)
+      params['from'] = Time.parse(params['from']) if params['from'].kind_of?(String)
+      params['to']   = Time.parse(params['to']) if params['to'].kind_of?(String)
       if params['from'] and params['to']
         # if from is more future than 3 days ago, use 'sc' (short period time worker)
         params['t']    = (@short_metrics && params['from'] > Time.now - 60 * 60 * 24 * 3) ? 'sc' : 'c'
