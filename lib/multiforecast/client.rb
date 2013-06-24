@@ -270,7 +270,7 @@ module MultiForecast
     # @return [Hash]  error response
     # @example
     def get_graph_uri(path, params = {})
-      params = preprocess_time_params(params)
+      params = preprocess_time_params(params) if params
       "#{client(path).base_uri}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
     end
 
@@ -288,7 +288,7 @@ module MultiForecast
     # @return [Hash]  error response
     # @example
     def get_complex_uri(path, params = {})
-      params = preprocess_time_params(params)
+      params = preprocess_time_params(params) if params
       "#{client(path).base_uri}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
     end
 
@@ -314,6 +314,7 @@ module MultiForecast
     # @return [String] query string
     # @example
     def query_string(params)
+      return '' if params.nil?
       params.keys.collect{|key| "#{URI.escape(key.to_s)}=#{URI.escape(params[key].to_s)}" }.join('&')
     end
   end
