@@ -4,10 +4,11 @@ require 'pp'
 
 ### Create a Multi GrowthForecast Client, the parameter is balancing rule and the base URI of GrowthForecast
 ### dirpath => GrowthForecast
-client = MultiForecast::Client.new({
-  'app1/' => 'http://localhost:5125',
-  'app2/' => 'http://localhost:5000',
-})
+client = MultiForecast::Client.new([
+  { dir: 'app1/', gfuri: 'http://localhost:5125' },
+  { dir: 'app2/', gfuri: 'http://localhost:5000' }
+])
+# client.debug_dev = STDOUT # print out HTTP requests and responses
 
 pp 'Create a graph (Post a number)'
 client.post_graph('app1/2xx_count', { 'number' => 0 })
@@ -104,7 +105,7 @@ pp client.get_graph('app2/2xx_count') #=>
 #  "path"=>"app2/2xx_count"}
 
 pp 'Get a graph image uri'
-pp client.get_graph_uri('app2/2xx_count', '3h') #=>
+pp client.get_graph_uri('app2/2xx_count', term: '3h') #=>
 # "http://localhost:5125/graph/mfclient/mfclient/app1%2F2xx_count?t=3h"
 
 pp 'Delete a complex graph'
@@ -145,7 +146,7 @@ pp client.get_complex(to_complex['path']) #=>
 #  "path"=>"app1/complex"}
 
 pp 'Get a complex graph image uri'
-pp client.get_complex_uri(to_complex['path'], '3h') #=>
+pp client.get_complex_uri(to_complex['path'], term: '3h') #=>
 # "http://localhost:5125/complex/graph/mfclient/mfclient/app1%2Fcomplex?t=3h"
 
 pp 'List complex graphs'

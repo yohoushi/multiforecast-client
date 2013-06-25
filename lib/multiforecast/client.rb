@@ -9,7 +9,7 @@ module MultiForecast
   class Client
     include ::MultiForecast::ConversionRule
     attr_accessor :clients
-    attr_accessor :debug
+    attr_accessor :debug_dev
     attr_accessor :short_metrics
 
     # @param [String] rules
@@ -26,9 +26,11 @@ module MultiForecast
       @short_metrics = true
     end
 
-    def debug=(flag)
-      @debug = flag
-      @clients.each {|c| c.debug = flag }
+    # set the `debug_dev` attribute of HTTPClient
+    # @param [IO] debug_dev such as STDOUT
+    def debug_dev=(debug_dev)
+      @debug_dev = debug_dev
+      @clients.each {|c| c.debug_dev = debug_dev }
     end
 
     def clients(dir = nil)
