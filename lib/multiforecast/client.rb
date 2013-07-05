@@ -12,18 +12,22 @@ module MultiForecast
     attr_accessor :debug_dev
     attr_accessor :short_metrics
 
-    # @param [String] rules
-    #   dir path => growthforecast base_uri
-    def initialize(rules = [{dir: '', gfuri: 'http://locahost:5125'}])
-      @clients = []
-      @rules   = {}
-      rules = rules.kind_of?(Array) ? rules : [rules]
-      rules.each_with_index do |rule, i|
-        dir, gfuri = rule[:dir], rule[:gfuri]
-        @rules[dir] = i
-        @clients[i] = GrowthForecast::Client.new(gfuri)
+    # @param [Hash] opts
+    #   [Hash] rules: Mapping rules from `path` to GrowthForecast's `base_uri`.
+    def initialize(opts = {})
+      @rules = opts[:rules] || { '' => 'http://locahost:5125' }
+      @short_metrics = opts[:short_metrics] || true
+
+      @clients = {}
+      @base_uris = {}
+      @rules.each do |path, base_uri|
+        if base_uri.kind_of?(Hash)
+          base_uri = uri[:in_uri]
+          out_uri  = uri[:out_uri]
+        end
+        @clients[path] = GrowthForecast::Client.new(base_uri)
+        @base_uris[path] = out_uri || base_uri
       end
-      @short_metrics = true
     end
 
     # set the `debug_dev` attribute of HTTPClient
@@ -33,8 +37,8 @@ module MultiForecast
       @clients.each {|c| c.debug_dev = debug_dev }
     end
 
-    def clients(dir = nil)
-      dir.nil? ? @clients : @clients.values_at(*ids(dir)).compact
+    def clients(base_path = nil)
+      base_path.nil? ? @clients.values : @clients.values_at(*ids(base_path)).compact
     end
 
     def client(path)
@@ -76,27 +80,27 @@ module MultiForecast
     # @return [Hash] list of graphs
     # @example
     # [
-    #   {"gfuri"=>"xxxxx",
+    #   {"base_uri"=>"xxxxx",
     #    "service_name"=>"mbclient",
     #    "section_name"=>"mbclient",
     #    "graph_name"=>"test%2Fhostname%2F%3C2sec_count",
     #    "path"=>"test/hostname/<2sec_count",
     #    "id"=>4},
-    #   {"gfuri"=>"xxxxx",
+    #   {"base_uri"=>"xxxxx",
     #    "service_name"=>"mbclient",
     #    "section_name"=>"mbclient",
     #    "graph_name"=>"test%2Fhostname%2F%3C1sec_count",
     #    "path"=>"test/hostname/<1sec_count",
     #    "id"=>3},
     # ]
-    def list_graph(dir = nil)
+    def list_graph(base_path = nil)
       mgroot = service_name # not necessary, but useful
-      clients(dir).inject([]) do |ret, client|
+      clients(base_path).inject([]) do |ret, client|
         graphs = []
         client.list_graph(mgroot).each do |graph|
-          graph['gfuri'] = client.base_uri
+          graph['base_uri'] = client.base_uri
           graph['path']  = path(graph['service_name'], graph['section_name'], graph['graph_name'])
-          graphs << graph if dir.nil? or graph['path'].index(dir) == 0
+          graphs << graph if base_path.nil? or graph['path'].index(base_path) == 0
         end
         ret = ret + graphs
       end
@@ -107,7 +111,7 @@ module MultiForecast
     # @return [Hash] the graph property
     # @example
     #{
-    #  "gfuri" => "xxxxxx",
+    #  "base_uri" => "xxxxxx",
     #  "path" => "test/hostname/<4sec_count",
     #  "service_name"=>"mbclient",
     #  "section_name"=>"mbclient",
@@ -134,7 +138,7 @@ module MultiForecast
     #  "md5"=>"3c59dc048e8850243be8079a5c74d079"}
     def get_graph(path)
       client(path).get_graph(service_name(path), section_name(path), graph_name(path)).tap do |graph|
-        graph['gfuri'] = client(path).base_uri
+        graph['base_uri'] = client(path).base_uri
         graph['path']  = path
       end
     end
@@ -168,27 +172,27 @@ module MultiForecast
     # @return [Hash] list of complex graphs
     # @example
     # [
-    #   {"gfuri"=>"xxxxx",
+    #   {"base_uri"=>"xxxxx",
     #    "path"=>"test/hostname/<2sec_count",
     #    "service_name"=>"mbclient",
     #    "section_name"=>"mbclient",
     #    "graph_name"=>"test%2Fhostname%2F%3C2sec_count",
     #    "id"=>4},
-    #   {"gfuri"=>"xxxxx",
+    #   {"base_uri"=>"xxxxx",
     #    "path"=>"test/hostname/<1sec_count",
     #    "service_name"=>"mbclient",
     #    "section_name"=>"mbclient",
     #    "graph_name"=>"test%2Fhostname%2F%3C1sec_count",
     #    "id"=>3},
     # ]
-    def list_complex(dir = nil)
+    def list_complex(base_path = nil)
       mgroot = service_name # not necessary, but useful
-      clients(dir).inject([]) do |ret, client|
+      clients(base_path).inject([]) do |ret, client|
         graphs = []
         client.list_complex(mgroot).each do |graph|
-          graph['gfuri'] = client.base_uri
+          graph['base_uri'] = client.base_uri
           graph['path']  = path(graph['service_name'], graph['section_name'], graph['graph_name'])
-          graphs << graph if dir.nil? or graph['path'].index(dir) == 0
+          graphs << graph if base_path.nil? or graph['path'].index(base_path) == 0
         end
         ret = ret + graphs
       end
@@ -209,7 +213,7 @@ module MultiForecast
         from_graph['section_name'] = section_name(from_graph['path'])
         from_graph['graph_name']   = graph_name(from_graph['path'])
         from_graph.delete('path')
-        from_graph.delete('gfuri')
+        from_graph.delete('base_uri')
       end
 
       to_complex['service_name'] = service_name(to_complex['path'])
@@ -242,7 +246,7 @@ module MultiForecast
     #  "updated_at"=>"2013/05/20 15:08:28"}
     def get_complex(path)
       client(path).get_complex(service_name(path), section_name(path), graph_name(path)).tap do |graph|
-        graph['gfuri'] = client(path).base_uri
+        graph['base_uri'] = client(path).base_uri
         graph['path']  = path
       end
     end
@@ -273,7 +277,7 @@ module MultiForecast
     # @example
     def get_graph_uri(path, params = {})
       params = preprocess_time_params(params) if params
-      "#{client(path).base_uri}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
+      "#{@base_uris[id(path)]}/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
     end
 
     # Get complex graph image uri
@@ -291,7 +295,7 @@ module MultiForecast
     # @example
     def get_complex_uri(path, params = {})
       params = preprocess_time_params(params) if params
-      "#{client(path).base_uri}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
+      "#{@base_uris[id(path)]}/complex/graph/#{CGI.escape(service_name(path))}/#{CGI.escape(section_name(path))}/#{CGI.escape(graph_name(path))}?#{query_string(params)}"
     end
 
     # process the time params (from and to)

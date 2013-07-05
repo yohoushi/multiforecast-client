@@ -24,15 +24,16 @@ module MultiForecast
     end
 
     def id(path)
-      @rules.each do |dir, id|
-        return id if path.index(dir) == 0
+      @rules.each do |base_path, base_uri|
+        return base_path if path.index(base_path) == 0
       end
-      return 0
+      return @rules.keys.first
     end
 
     def ids(path)
-      @rules.each_with_object([]) do |(dir, id), ids|
-        ids << id if path.index(dir) == 0
+      ids = []
+      @rules.each do |base_path, base_uri|
+        ids << base_path if path.index(base_path) == 0
       end
     end
   end
