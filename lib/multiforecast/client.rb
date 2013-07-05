@@ -94,10 +94,9 @@ module MultiForecast
     #    "id"=>3},
     # ]
     def list_graph(base_path = nil)
-      mgroot = service_name # not necessary, but useful
       clients(base_path).inject([]) do |ret, client|
         graphs = []
-        client.list_graph(mgroot).each do |graph|
+        client.list_graph.each do |graph|
           graph['base_uri'] = client.base_uri
           graph['path']  = path(graph['service_name'], graph['section_name'], graph['graph_name'])
           graphs << graph if base_path.nil? or graph['path'].index(base_path) == 0
@@ -186,10 +185,9 @@ module MultiForecast
     #    "id"=>3},
     # ]
     def list_complex(base_path = nil)
-      mgroot = service_name # not necessary, but useful
       clients(base_path).inject([]) do |ret, client|
         graphs = []
-        client.list_complex(mgroot).each do |graph|
+        client.list_complex.each do |graph|
           graph['base_uri'] = client.base_uri
           graph['path']  = path(graph['service_name'], graph['section_name'], graph['graph_name'])
           graphs << graph if base_path.nil? or graph['path'].index(base_path) == 0
