@@ -4,10 +4,12 @@ require 'cgi'
 module MultiForecast
   module ConversionRule
     def service_name(path = nil)
+      return path.split('/')[0] if path and path.count('/') == 2
       'mfclient'
     end
 
     def section_name(path = nil)
+      return path.split('/')[1] if path and path.count('/') == 2
       # + => '%20' is to avoid GF (Kossy?) bug
       # . => '%2E' because a/./b is recognized as a/b as URL
       CGI.escape(File.dirname(path)).gsub('+', '%20').gsub('.', '%2E')
@@ -18,6 +20,7 @@ module MultiForecast
     end
 
     def path(service_name, section_name, graph_name)
+      return "#{service_name}/#{section_name}/#{graph_name}" unless service_name == "mfclient"
       dirname = CGI.unescape(section_name)
       basename = graph_name
       dirname == "." ? basename : "#{dirname}/#{basename}"
