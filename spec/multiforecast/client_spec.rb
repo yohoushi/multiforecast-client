@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe MultiForecast::Client do
   include_context "setup_graph"
-  id_keys      = %w[gfuri path id service_name section_name graph_name]
+  id_keys      = %w[base_uri path id service_name section_name graph_name]
   graph_keys   = %w[number llimit mode stype adjustval gmode color created_at ulimit description
                    sulimit unit sort updated_at adjust type sllimit meta md5]
   complex_keys = %w[number complex created_at service_name section_name id graph_name data sumup
