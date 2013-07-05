@@ -9,7 +9,8 @@ module MultiForecast
 
     def section_name(path = nil)
       # + => '%20' is to avoid GF (Kossy?) bug
-      CGI.escape(File.dirname(path)).gsub('+', '%20')
+      # . => '%2E' because a/./b is recognized as a/b as URL
+      CGI.escape(File.dirname(path)).gsub('+', '%20').gsub('.', '%2E')
     end
 
     def graph_name(path)
@@ -17,7 +18,7 @@ module MultiForecast
     end
 
     def path(service_name, section_name, graph_name)
-      dirname = CGI.unescape(section_name.gsub('%20', '+'))
+      dirname = CGI.unescape(section_name)
       basename = graph_name
       dirname == "." ? basename : "#{dirname}/#{basename}"
     end
