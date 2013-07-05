@@ -34,10 +34,9 @@ module MultiForecast
     end
 
     def ids(path)
-      ids = []
-      @mapping.each do |base_path, base_uri|
-        ids << base_path if path.index(base_path) == 0
-      end
+      @mapping.map do |base_path, base_uri|
+        base_path if path.index(base_path) == 0
+      end.compact
     end
   end
 end

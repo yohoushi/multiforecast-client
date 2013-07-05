@@ -15,15 +15,15 @@ module MultiForecast
     # @param [Hash] opts
     #   [Hash] mapping: Mapping rules from `path` to GrowthForecast's `base_uri`.
     def initialize(opts = {})
-      @mapping = opts[:mapping] || { '' => 'http://locahost:5125' }
-      @short_metrics = opts[:short_metrics] || true
+      @mapping = opts['mapping'] || { '' => 'http://localhost:5125' }
+      @short_metrics = opts['short_metrics'] || true
 
       @clients = {}
       @base_uris = {}
       @mapping.each do |path, base_uri|
         if base_uri.kind_of?(Hash)
-          base_uri = uri[:in_uri]
-          out_uri  = uri[:out_uri]
+          base_uri = uri['in_uri']
+          out_uri  = uri['out_uri']
         end
         @clients[path] = GrowthForecast::Client.new(base_uri)
         @base_uris[path] = out_uri || base_uri
