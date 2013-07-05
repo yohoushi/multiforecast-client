@@ -5,7 +5,7 @@ module MultiForecast
   module ConversionRule
     def service_name(path)
       return path.split('/')[0] if path.count('/') == 2
-      'mfclient'
+      'multiforecast'
     end
 
     def section_name(path)
@@ -20,7 +20,7 @@ module MultiForecast
     end
 
     def path(service_name, section_name, graph_name)
-      return "#{service_name}/#{section_name}/#{graph_name}" unless service_name == "mfclient"
+      return "#{service_name}/#{section_name}/#{graph_name}" unless service_name == "multiforecast"
       dirname = CGI.unescape(section_name)
       basename = graph_name
       dirname == "." ? basename : "#{dirname}/#{basename}"

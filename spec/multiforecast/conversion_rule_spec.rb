@@ -7,19 +7,19 @@ describe MultiForecast::ConversionRule do
     context "4 or more levels" do
       let(:path) { 'a/b/c/d' }
       subject { service_name(path) }
-      it { should == 'mfclient' }
+      it { should == 'multiforecast' }
     end
 
     context "2 levels" do
       let(:path) { 'a/b' }
       subject { service_name(path) }
-      it { should == 'mfclient' }
+      it { should == 'multiforecast' }
     end
 
     context "1 level" do
       let(:path) { 'a' }
       subject { service_name(path) }
-      it { should == 'mfclient' }
+      it { should == 'multiforecast' }
     end
 
     context "3 levels (special)" do
