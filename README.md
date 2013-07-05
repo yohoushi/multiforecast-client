@@ -17,7 +17,7 @@ Features
 
 Create a client. NOTE: ruby's hash is an ordered hash. 
 
-    client = MultiForecast::Client.new(mapping: {
+    client = MultiForecast::Client.new('mapping' => {
       'foo/' => 'http://localhost:5125',
       ''     => 'http://localhost:5000'
     })

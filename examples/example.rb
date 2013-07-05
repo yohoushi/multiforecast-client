@@ -3,7 +3,7 @@ require 'multiforecast-client'
 require 'pp'
 
 ### Create a Multi GrowthForecast Client
-client = MultiForecast::Client.new(mapping: {
+client = MultiForecast::Client.new('mapping' => {
   'app1/' => 'http://localhost:5125',
   'app2/' => 'http://localhost:5000'
 })
