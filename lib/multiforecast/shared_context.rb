@@ -16,7 +16,7 @@ def base_uri
   'http://localhost:5125'
 end
 
-def mfclient(opts = {})
+def multiforecast(opts = {})
   opts['mapping'] ||= { '' => base_uri }
   MultiForecast::Client.new(opts)
 end

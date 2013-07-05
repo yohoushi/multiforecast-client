@@ -17,7 +17,7 @@ describe MultiForecast::Client do
 
   context "#get_graph" do
     include_context "stub_get_graph" if ENV['MOCK'] == 'on'
-    subject { mfclient.get_graph(graph["path"]) }
+    subject { multiforecast.get_graph(graph["path"]) }
     id_keys.each {|key| it { subject[key].should == graph[key] } }
     graph_keys.each {|key| it { subject.should have_key(key) } }
   end
@@ -28,7 +28,7 @@ describe MultiForecast::Client do
     params = {
       'number' => 0,
     }
-    subject { mfclient.post_graph(graph["path"], params) }
+    subject { multiforecast.post_graph(graph["path"], params) }
     it { subject["error"].should == 0 }
     params.keys.each {|key| it { subject["data"][key].should == params[key] } }
   end
@@ -37,8 +37,8 @@ describe MultiForecast::Client do
     include_context "stub_post_graph" if ENV['MOCK'] == 'on'
     include_context "stub_delete_graph" if ENV['MOCK'] == 'on'
     let(:graph) { { 'path' => "app name/host name/delete:test" } }
-    before  { mfclient.post_graph(graph['path'], { 'number' => 0 }) }
-    subject { mfclient.delete_graph(graph['path']) }
+    before  { multiforecast.post_graph(graph['path'], { 'number' => 0 }) }
+    subject { multiforecast.delete_graph(graph['path']) }
     it { subject["error"].should == 0 }
   end
 
@@ -52,9 +52,9 @@ describe MultiForecast::Client do
       'color'  => "#000000"
     }
     before do
-      @before = mfclient.get_graph(graph["path"])
-      @response = mfclient.edit_graph(graph["path"], params)
-      @after = mfclient.get_graph(graph["path"])
+      @before = multiforecast.get_graph(graph["path"])
+      @response = multiforecast.edit_graph(graph["path"], params)
+      @after = multiforecast.get_graph(graph["path"])
     end
     it { @response["error"].should == 0 }
     # @todo: how to stub @after?
@@ -70,9 +70,9 @@ describe MultiForecast::Client do
       context "#create_complex" do
         include_context "stub_create_complex" if ENV['MOCK'] == 'on'
         include_context "stub_delete_complex" if ENV['MOCK'] == 'on'
-        subject { mfclient.create_complex(from_graphs, to_complex) }
+        subject { multiforecast.create_complex(from_graphs, to_complex) }
         it { subject["error"].should == 0 }
-        after { mfclient.delete_complex(to_complex["path"]) }
+        after { multiforecast.delete_complex(to_complex["path"]) }
       end
     end
 
@@ -80,7 +80,7 @@ describe MultiForecast::Client do
       include_context "setup_complex"
       context "#get_complex" do
         include_context "stub_get_complex" if ENV['MOCK'] == 'on'
-        subject { mfclient.get_complex(to_complex['path']) }
+        subject { multiforecast.get_complex(to_complex['path']) }
         complex_keys.each {|key| it { subject.should have_key(key) } }
       end
     end
@@ -95,11 +95,11 @@ describe MultiForecast::Client do
       }
     end
     context "#get_graph_uri" do
-      subject { mfclient.get_graph_uri(graph["path"], params) }
+      subject { multiforecast.get_graph_uri(graph["path"], params) }
       it_should_behave_like 'graph_uri_params'
     end
     context "#get_complex_uri" do
-      subject { mfclient.get_complex_uri(graph["path"], params) }
+      subject { multiforecast.get_complex_uri(graph["path"], params) }
       it_should_behave_like 'graph_uri_params'
     end
   end
@@ -129,38 +129,38 @@ describe MultiForecast::Client do
     end
 
     context "#get_graph_uri" do
-      subject { mfclient_2.get_graph_uri(graph["path"], params) }
+      subject { multiforecast_2.get_graph_uri(graph["path"], params) }
       context "short_metrics is true and short period" do
-        let(:mfclient_2) { mfclient }
+        let(:multiforecast_2) { multiforecast }
         include_context "short_period"
         it_should_behave_like 'graph_uri_short_metrics'
       end
       context "short_metrics is true and long period" do
-        let(:mfclient_2) { mfclient }
+        let(:multiforecast_2) { multiforecast }
         include_context "long_period"
         it_should_behave_like 'graph_uri_long_metrics'
       end
       context "short_metrics is false and short period" do
-        let(:mfclient_2) { mfclient.tap{|s| s.short_metrics = false } }
+        let(:multiforecast_2) { multiforecast.tap{|s| s.short_metrics = false } }
         include_context "short_period"
         it_should_behave_like 'graph_uri_long_metrics'
       end
     end
 
     context "#get_complex_uri" do
-      subject { mfclient_2.get_complex_uri(graph["path"], params) }
+      subject { multiforecast_2.get_complex_uri(graph["path"], params) }
       context "short_metrics is true and short period" do
-        let(:mfclient_2) { mfclient }
+        let(:multiforecast_2) { multiforecast }
         include_context "short_period"
         it_should_behave_like 'graph_uri_short_metrics'
       end
       context "short_metrics is true and long period" do
-        let(:mfclient_2) { mfclient }
+        let(:multiforecast_2) { multiforecast }
         include_context "long_period"
         it_should_behave_like 'graph_uri_long_metrics'
       end
       context "short_metrics is false and short period" do
-        let(:mfclient_2) { mfclient.tap{|s| s.short_metrics = false } }
+        let(:multiforecast_2) { multiforecast.tap{|s| s.short_metrics = false } }
         include_context "short_period"
         it_should_behave_like 'graph_uri_long_metrics'
       end
