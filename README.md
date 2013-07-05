@@ -8,16 +8,27 @@ testing ruby: 1.9.2, 1.9.3, 2.0.0; GrowthForecast: >= 0.62 (Jun 27, 2013 release
 
 Features
 
-- Enables to send http requests to multiple growthforecast seemlessly
-- Support more than 3 levels
+- Possible to send http requests to multiple growthforecasts seemlessly
+- Enables to create graphs whose levels are more than 3.
 - CRUD graphs
 - Get graph image uri
 
 ## USAGE
 
-    gem install multiforecast-client
+Create a client. NOTE: ruby's hash is an ordered hash. 
 
-See [examples](./examples) directory.
+    client = MultiForecast::Client.new(mapping: {
+      'foo/' => 'http://localhost:5125',
+      ''     => 'http://localhost:5000'
+    })
+
+The first `post_graph` posts a number to the first GrowthForecast.
+The second `post_graph` posts a number to the second GrowthForecast because the specified path did not match with the first mapping rule 'foo/'.
+
+    client.post_graph('foo/b/c/d', { 'number' => 0 })
+    client.post_graph('bar/b/c/d', { 'number' => 0 })
+
+See [examples](./examples) for more.
 
 ## Contributing
 

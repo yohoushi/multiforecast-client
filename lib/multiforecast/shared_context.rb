@@ -17,6 +17,6 @@ def base_uri
 end
 
 def mfclient(opts = {})
-  opts[:rules] ||= { '' => base_uri }
+  opts[:mapping] ||= { '' => base_uri }
   MultiForecast::Client.new(opts)
 end

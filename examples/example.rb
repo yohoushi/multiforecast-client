@@ -2,12 +2,11 @@
 require 'multiforecast-client'
 require 'pp'
 
-### Create a Multi GrowthForecast Client, the parameter is balancing rule and the base URI of GrowthForecast
-### dirpath => GrowthForecast
-client = MultiForecast::Client.new([
-  { dir: 'app1/', gfuri: 'http://localhost:5125' },
-  { dir: 'app2/', gfuri: 'http://localhost:5000' }
-])
+### Create a Multi GrowthForecast Client
+client = MultiForecast::Client.new(mapping: {
+  'app1/' => 'http://localhost:5125',
+  'app2/' => 'http://localhost:5000'
+})
 # client.debug_dev = STDOUT # print out HTTP requests and responses
 
 pp 'Create a graph (Post a number)'
@@ -46,19 +45,19 @@ pp client.list_graph #=>
 #   "service_name"=>"mfclient",
 #   "section_name"=>"mfclient",
 #   "id"=>2,
-#   "gfuri"=>"http://localhost:5125",
+#   "base_uri"=>"http://localhost:5125",
 #   "path"=>"app1/3xx_count"},
 #  {"graph_name"=>"app1%2F2xx_count",
 #   "service_name"=>"mfclient",
 #   "section_name"=>"mfclient",
 #   "id"=>1,
-#   "gfuri"=>"http://localhost:5125",
+#   "base_uri"=>"http://localhost:5125",
 #   "path"=>"app1/2xx_count"},
 #  {"service_name"=>"mfclient",
 #   "graph_name"=>"app2%2F2xx_count",
 #   "section_name"=>"mfclient",
 #   "id"=>2,
-#   "gfuri"=>"http://localhost:5000",
+#   "base_uri"=>"http://localhost:5000",
 #   "path"=>"app2/2xx_count"}]
 
 pp 'List graphs by filtering by dirpath app1/'
@@ -67,13 +66,13 @@ pp client.list_graph('app1/') #=>
 #   "service_name"=>"mfclient",
 #   "section_name"=>"mfclient",
 #   "id"=>2,
-#   "gfuri"=>"http://localhost:5125",
+#   "base_uri"=>"http://localhost:5125",
 #   "path"=>"app1/3xx_count"},
 #  {"graph_name"=>"app1%2F2xx_count",
 #   "service_name"=>"mfclient",
 #   "section_name"=>"mfclient",
 #   "id"=>1,
-#   "gfuri"=>"http://localhost:5125",
+#   "base_uri"=>"http://localhost:5125",
 #   "path"=>"app1/2xx_count"}]
 
 pp 'Get a graph property'
@@ -101,7 +100,7 @@ pp client.get_graph('app2/2xx_count') #=>
 #  "type"=>"AREA",
 #  "sllimit"=>-100000,
 #  "md5"=>"c81e728d9d4c2f636f067f89cc14862c",
-#  "gfuri"=>"http://localhost:5000",
+#  "base_uri"=>"http://localhost:5000",
 #  "path"=>"app2/2xx_count"}
 
 pp 'Get a graph image uri'
@@ -142,7 +141,7 @@ pp client.get_complex(to_complex['path']) #=>
 #  "description"=>"response time count",
 #  "sort"=>10,
 #  "updated_at"=>"2013/05/20 18:00:09",
-#  "gfuri"=>"http://localhost:5125",
+#  "base_uri"=>"http://localhost:5125",
 #  "path"=>"app1/complex"}
 
 pp 'Get a complex graph image uri'
@@ -151,7 +150,7 @@ pp client.get_complex_uri(to_complex['path'], term: '3h') #=>
 
 pp 'List complex graphs'
 pp client.list_complex #=>
-# [{"service_name"=>"mfclient", "graph_name"=>"app1%2Fcomplex", "section_name"=>"mfclient", "id"=>1, "gfuri"=>"http://localhost:5125", "path"=>"app1/complex"}]
+# [{"service_name"=>"mfclient", "graph_name"=>"app1%2Fcomplex", "section_name"=>"mfclient", "id"=>1, "base_uri"=>"http://localhost:5125", "path"=>"app1/complex"}]
 
 pp 'List complex graphs by filetering by dirpath app1/'
 pp client.list_complex('app1/')

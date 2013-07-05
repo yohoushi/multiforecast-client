@@ -13,14 +13,14 @@ module MultiForecast
     attr_accessor :short_metrics
 
     # @param [Hash] opts
-    #   [Hash] rules: Mapping rules from `path` to GrowthForecast's `base_uri`.
+    #   [Hash] mapping: Mapping rules from `path` to GrowthForecast's `base_uri`.
     def initialize(opts = {})
-      @rules = opts[:rules] || { '' => 'http://locahost:5125' }
+      @mapping = opts[:mapping] || { '' => 'http://locahost:5125' }
       @short_metrics = opts[:short_metrics] || true
 
       @clients = {}
       @base_uris = {}
-      @rules.each do |path, base_uri|
+      @mapping.each do |path, base_uri|
         if base_uri.kind_of?(Hash)
           base_uri = uri[:in_uri]
           out_uri  = uri[:out_uri]

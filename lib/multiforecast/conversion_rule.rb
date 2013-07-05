@@ -24,15 +24,15 @@ module MultiForecast
     end
 
     def id(path)
-      @rules.each do |base_path, base_uri|
+      @mapping.each do |base_path, base_uri|
         return base_path if path.index(base_path) == 0
       end
-      return @rules.keys.first
+      return @mapping.keys.first
     end
 
     def ids(path)
       ids = []
-      @rules.each do |base_path, base_uri|
+      @mapping.each do |base_path, base_uri|
         ids << base_path if path.index(base_path) == 0
       end
     end
