@@ -20,7 +20,6 @@ class MultiForecast::CLI < Thor
   def generate(target)
     config = {
       'mapping' => { '' => 'http://localhost:5125' },
-      'short_metrics' => true,
     }
     File.open("multiforecast.yml", "w") do |file|
       YAML.dump(config, file)
