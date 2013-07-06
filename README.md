@@ -51,7 +51,6 @@ $ cat multiforecast.yml
 ---
 mapping:
   '': http://localhost:5125
-short_metrics: true
 ```
 
 Post a number and create a graph:
@@ -75,13 +74,13 @@ $ multiforecast help
 ## INSIDE: How to treat graphs of more than 3 levels
 
 Although GrowthForecast can treat only graphs of 3 leveled path, MultiForecast can handle graphs of more than 3 levels.
-This feature is achieved by converting a given path to GrowthForecast's `service_name/section_name/graph_name` path as follows:
+This feature is achieved by converting a given path string to `service_name/section_name/graph_name` path of GrowthForecast as follows:
 
     service_name = 'multiforecast'
     section_name = CGI.escape(File.dirname(path)).gsub('+', '%20').gsub('.', '%2E')
     graph_name   = File.basename(path)
 
-As a viewer for these converted path, [Yohoushi](https://github.com/yohoushi/yohoushi) is ready for you.
+As a viewer for such converted graphs, you can use [Yohoushi](https://github.com/yohoushi/yohoushi) visualization tool.
 
 ## Contributing
 
