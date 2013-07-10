@@ -5,13 +5,13 @@ base_uri = 'http://localhost:5125'
 shared_context "stub_list_graph" do
   def list_graph_example
     [
-      {"gfuri"=>'http://localhost:5125',
+      {"base_uri"=>'http://localhost:5125',
        "path"=>"app name/host name/<1sec count",
        "service_name"=>"multiforecast",
        "section_name"=>"app%20name%2Fhost%20name",
        "graph_name"=>"<1sec count",
        "id"=>1},
-      {"gfuri"=>'http://localhost:5125',
+      {"base_uri"=>'http://localhost:5125',
        "path"=>"app name/host name/<2sec count",
        "service_name"=>"multiforecast",
        "section_name"=>"app+name%2Fhost+name",
@@ -30,7 +30,7 @@ end
 shared_context "stub_get_graph" do
   def graph_example
     {
-      "gfuri"=>"http://localhost:5125",
+      "base_uri"=>"http://localhost:5125",
       "path"=>"app name/host name/<1sec count",
       "number"=>0,
       "llimit"=>-1000000000,
@@ -95,7 +95,7 @@ end
 shared_context "stub_list_complex" do
   def list_complex_example
     [
-      {"gfuri"=>"http://localhost:5125",
+      {"base_uri"=>"http://localhost:5125",
        "path"=>"app name/host name/complex graph test",
        "service_name"=>"multiforecast",
        "section_name"=>"app%20name%2Fhost%20name",
@@ -113,7 +113,7 @@ end
 
 shared_context "stub_get_complex" do
   def complex_example
-    {"gfuri"=>"http://localhost:5125",
+    {"base_uri"=>"http://localhost:5125",
      "path"=>"app name/host name/complex graph test",
      "service_name"=>"multiforecast",
      "section_name"=>"app%20name%2Fhost%20name",
