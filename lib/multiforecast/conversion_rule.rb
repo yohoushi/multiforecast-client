@@ -3,6 +3,16 @@ require 'cgi'
 
 module MultiForecast
   module ConversionRule
+    def uri_escape(string)
+      # + => '%20' is to avoid GF (Kossy?) bug
+      # . => '%2E' because a/./b is recognized as a/b as URL
+      CGI.escape(string).gsub('+', '%20').gsub('.', '%2E') if string
+    end
+
+    def uri_unescape(string)
+      CGI.unescape(string) if string
+    end
+
     def service_name(path)
       return path.split('/')[0] if path.count('/') == 2
       'multiforecast'
@@ -10,9 +20,7 @@ module MultiForecast
 
     def section_name(path)
       return path.split('/')[1] if path.count('/') == 2
-      # + => '%20' is to avoid GF (Kossy?) bug
-      # . => '%2E' because a/./b is recognized as a/b as URL
-      CGI.escape(File.dirname(path)).gsub('+', '%20').gsub('.', '%2E')
+      uri_escape(File.dirname(path))
     end
 
     def graph_name(path)
@@ -21,7 +29,7 @@ module MultiForecast
 
     def path(service_name, section_name, graph_name)
       return "#{service_name}/#{section_name}/#{graph_name}" unless service_name == "multiforecast"
-      dirname = CGI.unescape(section_name)
+      dirname = uri_unescape(section_name)
       basename = graph_name
       dirname == "." ? basename : "#{dirname}/#{basename}"
     end
