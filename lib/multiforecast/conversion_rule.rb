@@ -13,17 +13,25 @@ module MultiForecast
       CGI.unescape(string) if string
     end
 
+    def lstrip(string, substring)
+      string[substring.size..-1] if string.index(substring) == 0
+    end
+
+
     def service_name(path)
+      path = lstrip(path, '/')
       return path.split('/')[0] if path.count('/') == 2
       'multiforecast'
     end
 
     def section_name(path)
+      path = lstrip(path, '/')
       return path.split('/')[1] if path.count('/') == 2
       uri_escape(File.dirname(path))
     end
 
     def graph_name(path)
+      path = lstrip(path, '/')
       File.basename(path)
     end
 
@@ -35,6 +43,7 @@ module MultiForecast
     end
 
     def id(path)
+      path = lstrip(path, '/')
       @mapping.each do |base_path, base_uri|
         return base_path if path.index(base_path) == 0
       end
@@ -42,6 +51,7 @@ module MultiForecast
     end
 
     def ids(path)
+      path = lstrip(path, '/')
       @mapping.map do |base_path, base_uri|
         base_path if path.index(base_path) == 0
       end.compact
