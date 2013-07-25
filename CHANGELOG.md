@@ -1,3 +1,9 @@
+# 0.62.0.4 (2013/07/25)
+
+CHANGES
+
+* Strip / at the beggining of path
+
 # 0.62.0.3 (2013/07/11)
 
 Fix
