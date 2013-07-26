@@ -14,9 +14,8 @@ module MultiForecast
     end
 
     def lstrip(string, substring)
-      string[substring.size..-1] if string.index(substring) == 0
+      string.index(substring) == 0 ? string[substring.size..-1] : string
     end
-
 
     def service_name(path)
       path = lstrip(path, '/')
