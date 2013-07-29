@@ -275,7 +275,7 @@ module MultiForecast
     # @example
     def get_graph_uri(path, params = {})
       params = preprocess_time_params(params) if params
-      "#{@base_uris[id(path)]}/graph/#{uri_escape(service_name(path))}/#{uri_escape(section_name(path))}/#{uri_escape(graph_name(path))}?#{query_string(params)}"
+      "#{@base_uris[id(path)]}/graph/#{uri_escape(service_name(path))}/#{uri_escape(section_name(path))}/#{uri_escape(graph_name(path))}#{'?' unless params.empty?}#{query_string(params)}"
     end
 
     # Get complex graph image uri
@@ -293,7 +293,7 @@ module MultiForecast
     # @example
     def get_complex_uri(path, params = {})
       params = preprocess_time_params(params) if params
-      "#{@base_uris[id(path)]}/complex/graph/#{uri_escape(service_name(path))}/#{uri_escape(section_name(path))}/#{uri_escape(graph_name(path))}?#{query_string(params)}"
+      "#{@base_uris[id(path)]}/complex/graph/#{uri_escape(service_name(path))}/#{uri_escape(section_name(path))}/#{uri_escape(graph_name(path))}#{'?' unless params.empty?}#{query_string(params)}"
     end
 
     # process the time params (from and to)
