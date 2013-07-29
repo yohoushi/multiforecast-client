@@ -28,3 +28,7 @@ shared_examples_for 'graph_uri_params_fromto' do
   it { subject.should match(/(\?|&)from=#{Regexp.escape(URI.escape(params['from'].to_s))}(&|$)/) }
   it { subject.should match(/(\?|&)to=#{Regexp.escape(URI.escape(params['to'].to_s))}(&|$)/) }
 end
+
+shared_examples_for 'graph_uri_empty_params' do
+  it { subject.should_not match(/(\?|&)/) }
+end
