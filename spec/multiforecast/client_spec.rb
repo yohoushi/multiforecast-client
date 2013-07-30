@@ -86,7 +86,7 @@ describe MultiForecast::Client do
     end
   end
 
-  describe "graph_uri" do
+  describe "graph_uri_term" do
     let(:params) do
       {
         't' => 'h',
@@ -101,6 +101,30 @@ describe MultiForecast::Client do
     context "#get_complex_uri" do
       subject { multiforecast.get_complex_uri(graph["path"], params) }
       it_should_behave_like 'graph_uri_params'
+    end
+  end
+
+  describe "graph_uri_empty" do
+    let(:params) { {} }
+    context "#get_graph_uri" do
+      subject { multiforecast.get_graph_uri(graph["path"], params) }
+      it_should_behave_like 'graph_uri_empty_params'
+    end
+    context "#get_complex_uri" do
+      subject { multiforecast.get_complex_uri(graph["path"], params) }
+      it_should_behave_like 'graph_uri_empty_params'
+    end
+  end
+
+  describe "graph_uri_nil" do
+    let(:params) { nil }
+    context "#get_graph_uri" do
+      subject { multiforecast.get_graph_uri(graph["path"], params) }
+      it_should_behave_like 'graph_uri_empty_params'
+    end
+    context "#get_complex_uri" do
+      subject { multiforecast.get_complex_uri(graph["path"], params) }
+      it_should_behave_like 'graph_uri_empty_params'
     end
   end
 

@@ -12,3 +12,4 @@ tags
 tmp/*
 .yardoc
 multiforecast.yml
+pkg
