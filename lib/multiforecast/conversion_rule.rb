@@ -4,8 +4,10 @@ require 'cgi'
 module MultiForecast
   module ConversionRule
     def uri_escape(string)
-      # + => '%20' is to avoid GF (Kossy?) bug
-      # . => '%2E' because a/./b is recognized as a/b as URL
+      # Here, we want to do CGI.escape to encode '/', but GF (Plack?) does URI.unescape when it receives.
+      # Major Difference: In URI.escape, ' ' => '%20'. In CGI.escape, ' ' => '+'.
+      # Thus, we need to convert as ' ' => '+', and then, '+' => '%20' so that GF can unescape '%20' => ' '.
+      # '.' => '%2E' because a/./b is recognized as a/b as URL
       CGI.escape(string).gsub('+', '%20').gsub('.', '%2E') if string
     end
 

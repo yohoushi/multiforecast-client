@@ -14,7 +14,7 @@ CHANGES
 
 Fix
 
-* Escape a white space to %20, not + to avoid GF (Kossy?) bug
+* Escape a white space to %20, not +.
 
 # 0.62.0.2 (2013/07/07)
 
