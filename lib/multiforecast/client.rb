@@ -15,7 +15,9 @@ module MultiForecast
     # @param [Hash] opts
     #   [Hash] mapping: Mapping rules from `path` to GrowthForecast's `base_uri`.
     def initialize(opts = {})
-      @mapping = opts['mapping'] || { '' => 'http://localhost:5125' }
+      @mapping = {}
+      mapping = opts['mapping'] || { '' => 'http://localhost:5125' }
+      mapping.each {|key, val| @mapping[lstrip(key, '/')] = val }
       @short_metrics = opts['short_metrics'] || true
 
       @clients = {}

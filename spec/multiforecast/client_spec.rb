@@ -8,6 +8,18 @@ describe MultiForecast::Client do
   complex_keys = %w[number complex created_at service_name section_name id graph_name data sumup
                    description sort updated_at]
 
+  context "#initialize" do
+    context "typical" do
+      subject { MultiForecast::Client.new('mapping' => {'app1/' => 'http://localhost:5125'}) }
+      it { subject.instance_variable_get(:@mapping).keys.first.should == 'app1/' }
+    end
+
+    context "leading / of mapping path should be stripped" do
+      subject { MultiForecast::Client.new('mapping' => {'/app1/' => 'http://localhost:5125'}) }
+      it { subject.instance_variable_get(:@mapping).keys.first.should == 'app1/' }
+    end
+  end
+
   context "#list_graph" do
     include_context "stub_list_graph" if ENV['MOCK'] == 'on'
     subject { graphs }
