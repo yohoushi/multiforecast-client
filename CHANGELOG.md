@@ -1,3 +1,9 @@
+# 0.62.0.6 (2013/09/18)
+
+CHANGES
+
+* Change the github repositry from sonots to yohoushi
+
 # 0.62.0.5 (2013/07/27)
 
 Fix
