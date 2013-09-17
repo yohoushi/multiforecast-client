@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.version       = File.read(File.expand_path('VERSION', File.dirname(__FILE__))).chomp
   gem.authors       = ["Naotoshi Seo"]
   gem.email         = ["sonots@gmail.com"]
-  gem.homepage      = "https://github.com/sonots/multiforecast-client"
+  gem.homepage      = "https://github.com/yohoushi/multiforecast-client"
   gem.summary       = "Multiple GrowthForecast Client"
   gem.description   = gem.summary
   gem.licenses      = ['MIT']
