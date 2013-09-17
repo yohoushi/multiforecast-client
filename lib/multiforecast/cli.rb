@@ -4,6 +4,7 @@ require 'yaml'
 require 'multiforecast-client'
 
 class MultiForecast::CLI < Thor
+  include ::MultiForecast::ConversionRule
   class_option :config,    :aliases => ["-c"], :type => :string
   class_option :silent,    :aliases => ["-S"], :type => :boolean
 
@@ -35,6 +36,7 @@ class MultiForecast::CLI < Thor
     $ multiforecast post '{"number":0}' 'test/test' -c multiforecast.yml
   LONGDESC
   def post(json, path)
+    path = lstrip(path, '/')
     exec do
       res = @client.post_graph(path, JSON.parse(json))
       $stdout.puts res unless @options['silent']
@@ -42,7 +44,14 @@ class MultiForecast::CLI < Thor
   end
 
   desc 'delete <base_path>', 'Delete a graph or graphs under a path'
+  long_desc <<-LONGDESC
+    Delete a graph or graphs under a path
+
+    ex)
+    $ multiforecast delete 'test/test' -c multiforecast.yml
+  LONGDESC
   def delete(base_path)
+    base_path = lstrip(base_path, '/')
     graphs = @client.list_graph(base_path)
     graphs.each do |graph|
       exec do

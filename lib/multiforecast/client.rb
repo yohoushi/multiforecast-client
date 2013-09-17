@@ -17,6 +17,7 @@ module MultiForecast
     def initialize(opts = {})
       @mapping = {}
       mapping = opts['mapping'] || { '' => 'http://localhost:5125' }
+      # remove heading / of path
       mapping.each {|key, val| @mapping[lstrip(key, '/')] = val }
       @short_metrics = opts['short_metrics'] || true
 
@@ -79,6 +80,7 @@ module MultiForecast
     end
 
     # Get the list of graphs, /json/list/graph
+    # @param [String] base_path
     # @return [Hash] list of graphs
     # @example
     # [
