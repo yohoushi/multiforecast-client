@@ -35,11 +35,9 @@ class MultiForecast::CLI < Thor
     $ multiforecast post '{"number":0}' 'test/test' -c multiforecast.yml
   LONGDESC
   def post(json, path)
-    begin
+    exec do
       res = @client.post_graph(path, JSON.parse(json))
       $stdout.puts res unless @options['silent']
-    rescue => e
-      $stderr.puts "\tclass:#{e.class}\t#{e.message}"
     end
   end
 
@@ -47,23 +45,28 @@ class MultiForecast::CLI < Thor
   def delete(base_path)
     graphs = @client.list_graph(base_path)
     graphs.each do |graph|
-      begin
+      exec do
         @client.delete_graph(graph['path'])
         $stdout.puts "Deleted #{graph['path']}" unless @options['silent']
-      rescue => e
-        $stderr.puts "\tclass:#{e.class}\t#{e.message}"
       end
     end
     complexes = @client.list_complex(base_path)
     complexes.each do |graph|
-      begin
+      exec do
         @client.delete_complex(graph['path'])
         $stdout.puts "Deleted #{graph['path']}" unless @options['silent']
-      rescue => e
-        puts "\tclass:#{e.class}\t#{e.message}"
       end
     end
     $stderr.puts "Not found" if graphs.empty? and complexes.empty? unless @options['silent']
+  end
+
+  private
+  def exec(&blk)
+    begin
+      yield
+    rescue => e
+      $stderr.puts "\tclass:#{e.class}\t#{e.message}"
+    end
   end
 end
 
