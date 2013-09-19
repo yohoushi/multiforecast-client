@@ -110,10 +110,7 @@ class MultiForecast::CLI < Thor
     graphs.each do |graph|
       path = graph['path']
       next unless color = colors[File.basename(path)]
-      data = {
-        'color' => color,
-        'unit' => 'count',
-      }
+      data = { 'color' => color }
       puts "Setup #{path} with #{color}" unless @options['silent']
       exec { @client.edit_graph(path, data) }
     end
@@ -127,7 +124,7 @@ class MultiForecast::CLI < Thor
 
       base = {'gmode' => 'gauge', 'stack' => true, 'type' => 'AREA'}
       from_graphs_params = from_graphs.map {|name| base.merge('path' => "#{dirname}/#{name}") }
-      to_complex_params = { 'path' => "#{dirname}/#{to_complex}", 'sort' => 1 }
+      to_complex_params = { 'path' => "#{dirname}/#{to_complex}", 'sort' => 0 }
       puts "Setup #{dirname}/#{to_complex} with #{from_graphs}" unless @options['silent']
       exec { @client.create_complex(from_graphs_params, to_complex_params) }
     end
