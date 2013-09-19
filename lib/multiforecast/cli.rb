@@ -53,23 +53,86 @@ class MultiForecast::CLI < Thor
   def delete(base_path)
     base_path = lstrip(base_path, '/')
     graphs = @client.list_graph(base_path)
-    graphs.each do |graph|
-      exec do
-        @client.delete_graph(graph['path'])
-        $stdout.puts "Deleted #{graph['path']}" unless @options['silent']
-      end
-    end
+    delete_graphs(graphs)
     complexes = @client.list_complex(base_path)
-    complexes.each do |graph|
-      exec do
-        @client.delete_complex(graph['path'])
-        $stdout.puts "Deleted #{graph['path']}" unless @options['silent']
-      end
-    end
+    delete_complexes(complexes)
     $stderr.puts "Not found" if graphs.empty? and complexes.empty? unless @options['silent']
   end
 
+  desc 'color', 'change the color of graphs'
+  long_desc <<-LONGDESC
+    Change the color of graphs
+
+    ex) multiforecast color -k '2xx_count:#1111cc' '3xx_count:#11cc11' -c multiforecast.yml
+  LONGDESC
+  option :colors,    :type => :hash,   :aliases => '-k', :required => true, :banner => 'GRAPH_NAME:COLOR ...'
+  option :base_path, :type => :string, :aliases => '-b'
+  def color
+    base_path = lstrip(options[:base_path], '/') if options[:base_path]
+    graphs = @client.list_graph(base_path)
+    setup_colors(options[:colors], graphs)
+  end
+
+  desc 'create_complex', 'create complex graphs'
+  long_desc <<-LONGDESC
+    Create complex graphs under a url
+
+    ex) multiforecast create_complex -f 2xx_count 3xx_count -t status_count -c multiforecast.yml
+  LONGDESC
+  option :from_graphs, :type => :array,  :aliases => '-f', :required => true, :banner => 'GRAPH_NAMES ...'
+  option :to_complex,  :type => :string, :aliases => '-t', :required => true
+  option :base_path,   :type => :string, :aliases => '-b'
+  def create_complex
+    base_path = lstrip(options[:base_path], '/') if options[:base_path]
+    graphs = @client.list_graph(base_path)
+    setup_complex(options[:from_graphs], options[:to_complex], graphs)
+  end
+
   private
+
+  def delete_graphs(graphs)
+    graphs.each do |graph|
+      path = graph['path']
+      puts "Delete #{path}" unless @options['silent']
+      exec { @client.delete_graph(path) }
+    end
+  end
+
+  def delete_complexes(complexes)
+    complexes.each do |graph|
+      path = graph['path']
+      puts "Delete #{path}" unless @options['silent']
+      exec { @client.delete_complex(path) }
+    end
+  end
+
+  def setup_colors(colors, graphs)
+    graphs.each do |graph|
+      path = graph['path']
+      next unless color = colors[File.basename(path)]
+      data = {
+        'color' => color,
+        'unit' => 'count',
+      }
+      puts "Setup #{path} with #{color}" unless @options['silent']
+      exec { @client.edit_graph(path, data) }
+    end
+  end
+
+  def setup_complex(from_graphs, to_complex, graphs)
+    from_graph_first = from_graphs.first
+    graphs.each do |graph|
+      next unless File.basename(graph['path']) == from_graph_first
+      dirname = File.dirname(graph['path'])
+
+      base = {'gmode' => 'gauge', 'stack' => true, 'type' => 'AREA'}
+      from_graphs_params = from_graphs.map {|name| base.merge('path' => "#{dirname}/#{name}") }
+      to_complex_params = { 'path' => "#{dirname}/#{to_complex}", 'sort' => 1 }
+      puts "Setup #{dirname}/#{to_complex} with #{from_graphs}" unless @options['silent']
+      exec { @client.create_complex(from_graphs_params, to_complex_params) }
+    end
+  end
+
   def exec(&blk)
     begin
       yield

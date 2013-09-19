@@ -59,10 +59,22 @@ Post a number and create a graph:
 $ multiforecast post '{"number":0}' 'foo/a/b/c' -c multiforecast.yml
 ```
 
-Delete a graph or graphs under a path:
+Delete a graph or graphs under a base path:
 
 ```
 $ multiforecast delete 'foo/' -c multiforecast.yml
+```
+
+Change the color of graphs under a base path:
+
+```
+$ multiforecast color -k '2xx_count:#1111cc' '3xx_count:#11cc11' -b 'foo/' -c multiforecast.yml
+```
+
+Create complex graphs under a base path:
+
+```
+$ multiforecast create_complex -f 2xx_count 3xx_count -t status_count -b 'foo/' -c multiforecast.yml
 ```
 
 See help for more:
