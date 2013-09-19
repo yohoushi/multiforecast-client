@@ -1,3 +1,9 @@
+# 0.62.0.7 (2013/09/19)
+
+Enhancements:
+
+* Add `color` and `create_complex` sub command
+
 # 0.62.0.6 (2013/09/18)
 
 CHANGES
