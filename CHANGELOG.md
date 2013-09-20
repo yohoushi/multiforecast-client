@@ -1,3 +1,9 @@
+# 0.62.0.8 (2013/09/20)
+
+Enhancements:
+
+* Add `--graph-names` options to `delete` sub command
+
 # 0.62.0.7 (2013/09/19)
 
 Enhancements:
