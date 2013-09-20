@@ -32,8 +32,7 @@ class MultiForecast::CLI < Thor
   long_desc <<-LONGDESC
     Post a parameter to a path
 
-    ex)
-    $ multiforecast post '{"number":0}' 'test/test' -c multiforecast.yml
+    ex) multiforecast post '{"number":0}' 'test/test' -c multiforecast.yml
   LONGDESC
   def post(json, path)
     path = lstrip(path, '/')
@@ -43,19 +42,23 @@ class MultiForecast::CLI < Thor
     end
   end
 
+  # NOTE: base_path argument should be a requirement for foolproof
   desc 'delete <base_path>', 'Delete a graph or graphs under a path'
   long_desc <<-LONGDESC
     Delete a graph or graphs under a path
 
-    ex)
-    $ multiforecast delete 'test/test' -c multiforecast.yml
+    ex) multiforecast delete 'test/test' -c multiforecast.yml
   LONGDESC
+  option :graph_names,   :type => :array, :aliases => '-g'
   def delete(base_path)
+    graph_names = options['graph_names']
     base_path = lstrip(base_path, '/')
+
     graphs = @client.list_graph(base_path)
-    delete_graphs(graphs)
+    delete_graphs(graphs, graph_names)
+
     complexes = @client.list_complex(base_path)
-    delete_complexes(complexes)
+    delete_complexes(complexes, graph_names)
     $stderr.puts "Not found" if graphs.empty? and complexes.empty? unless @options['silent']
   end
 
@@ -90,17 +93,19 @@ class MultiForecast::CLI < Thor
 
   private
 
-  def delete_graphs(graphs)
+  def delete_graphs(graphs, graph_names = nil)
     graphs.each do |graph|
       path = graph['path']
+      next if graph_names and !graph_names.include?(File.basename(path))
       puts "Delete #{path}" unless @options['silent']
       exec { @client.delete_graph(path) }
     end
   end
 
-  def delete_complexes(complexes)
+  def delete_complexes(complexes, graph_names = nil)
     complexes.each do |graph|
       path = graph['path']
+      next if graph_names and !graph_names.include?(File.basename(path))
       puts "Delete #{path}" unless @options['silent']
       exec { @client.delete_complex(path) }
     end
