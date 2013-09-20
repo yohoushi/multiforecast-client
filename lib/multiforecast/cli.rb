@@ -11,6 +11,7 @@ class MultiForecast::CLI < Thor
   def initialize(args = [], opts = [], config = {})
     super(args, opts, config)
 
+    # NOTE: Please note that @options receives only strings, no symbols anymore
     if options['config'] && File.exists?(options['config'])
       @options = YAML.load_file(options['config']).merge(@options)
     end
@@ -51,14 +52,13 @@ class MultiForecast::CLI < Thor
   LONGDESC
   option :graph_names,   :type => :array, :aliases => '-g'
   def delete(base_path)
-    graph_names = options['graph_names']
     base_path = lstrip(base_path, '/')
 
     graphs = @client.list_graph(base_path)
-    delete_graphs(graphs, graph_names)
+    delete_graphs(graphs, @options['graph_names'])
 
     complexes = @client.list_complex(base_path)
-    delete_complexes(complexes, graph_names)
+    delete_complexes(complexes, @options['graph_names'])
     $stderr.puts "Not found" if graphs.empty? and complexes.empty? unless @options['silent']
   end
 
@@ -71,9 +71,9 @@ class MultiForecast::CLI < Thor
   option :colors,    :type => :hash,   :aliases => '-k', :required => true, :banner => 'GRAPH_NAME:COLOR ...'
   option :base_path, :type => :string, :aliases => '-b'
   def color
-    base_path = lstrip(options[:base_path], '/') if options[:base_path]
+    base_path = lstrip(@options['base_path'], '/') if @options['base_path']
     graphs = @client.list_graph(base_path)
-    setup_colors(options[:colors], graphs)
+    setup_colors(@options['colors'], graphs)
   end
 
   desc 'create_complex', 'create complex graphs'
@@ -86,9 +86,9 @@ class MultiForecast::CLI < Thor
   option :to_complex,  :type => :string, :aliases => '-t', :required => true
   option :base_path,   :type => :string, :aliases => '-b'
   def create_complex
-    base_path = lstrip(options[:base_path], '/') if options[:base_path]
+    base_path = lstrip(@options['base_path'], '/') if @options['base_path']
     graphs = @client.list_graph(base_path)
-    setup_complex(options[:from_graphs], options[:to_complex], graphs)
+    setup_complex(options['from_graphs'], options['to_complex'], graphs)
   end
 
   private
