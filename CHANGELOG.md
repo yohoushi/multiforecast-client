@@ -1,3 +1,9 @@
+# 0.72.0.1 (2013/11/27)
+
+Fix
+
+* Fix the hidden function of mapping to `in_uri` and `out_uri`
+
 # 0.62.0.8 (2013/09/20)
 
 Enhancements:
