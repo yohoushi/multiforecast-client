@@ -25,8 +25,8 @@ module MultiForecast
       @base_uris = {}
       @mapping.each do |path, base_uri|
         if base_uri.kind_of?(Hash)
-          base_uri = uri['in_uri']
-          out_uri  = uri['out_uri']
+          out_uri  = base_uri['out_uri']
+          base_uri = base_uri['in_uri']
         end
         @clients[path] = GrowthForecast::Client.new(base_uri)
         @base_uris[path] = out_uri || base_uri
