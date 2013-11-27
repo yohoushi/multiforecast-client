@@ -9,16 +9,18 @@ shared_context "setup_graph" do
   include_context "let_graph"
   include_context "stub_post_graph" if ENV['MOCK'] == 'on'
   include_context "stub_delete_graph" if ENV['MOCK'] == 'on'
-  before(:all) {
-    multiforecast.delete_graph("app name/host name/<1sec count") rescue nil
-    multiforecast.delete_graph("app name/host name/<2sec count") rescue nil
-    multiforecast.post_graph("app name/host name/<1sec count", { 'number' => 0 }) rescue nil
-    multiforecast.post_graph("app name/host name/<2sec count", { 'number' => 0 }) rescue nil
-  }
-  after(:all) {
-    multiforecast.delete_graph("app name/host name/<1sec count") rescue nil
-    multiforecast.delete_graph("app name/host name/<2sec count") rescue nil
-  }
+  if ENV['MOCK'] == 'off'
+    before(:all) {
+      multiforecast.delete_graph("app name/host name/<1sec count") rescue nil
+      multiforecast.delete_graph("app name/host name/<2sec count") rescue nil
+      multiforecast.post_graph("app name/host name/<1sec count", { 'number' => 0 }) rescue nil
+      multiforecast.post_graph("app name/host name/<2sec count", { 'number' => 0 }) rescue nil
+    }
+    after(:all) {
+      multiforecast.delete_graph("app name/host name/<1sec count") rescue nil
+      multiforecast.delete_graph("app name/host name/<2sec count") rescue nil
+    }
+  end
 end
 
 shared_context "let_complex" do
