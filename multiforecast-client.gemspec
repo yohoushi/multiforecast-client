@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_runtime_dependency "growthforecast-client", "~> 0.62.0"
+  gem.add_runtime_dependency "growthforecast-client", ">= 0.62.0"
 
   # for testing
   gem.add_development_dependency "rake"
