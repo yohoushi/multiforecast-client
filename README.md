@@ -83,6 +83,20 @@ See help for more:
 $ multiforecast help
 ```
 
+## Tips
+
+### Debug Print
+
+Following codes print http requests and resposes to STDOUT
+
+```ruby
+client = MultiForecast::Client.new('mapping' => {
+  'foo/' => 'http://localhost:5125',
+  ''     => 'http://localhost:5000'
+})
+client.debug_dev = STDOUT # IO object
+```
+
 ## INSIDE: How to treat graphs of more than 3 levels
 
 Although GrowthForecast can treat only graphs of 3 leveled path, MultiForecast can handle graphs of more than 3 levels.
