@@ -37,7 +37,7 @@ module MultiForecast
     # @param [IO] debug_dev such as STDOUT
     def debug_dev=(debug_dev)
       @debug_dev = debug_dev
-      @clients.each {|c| c.debug_dev = debug_dev }
+      @clients.each {|path, c| c.debug_dev = debug_dev }
     end
 
     def clients(base_path = nil)

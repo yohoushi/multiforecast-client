@@ -20,6 +20,11 @@ describe MultiForecast::Client do
     end
   end
 
+  context "#debug_dev" do
+    subject { MultiForecast::Client.new('mapping' => {'app1/' => 'http://localhost:5125'}) }
+    it { expect { subject.debug_dev = STDOUT }.not_to raise_error }
+  end
+
   context "#list_graph" do
     include_context "stub_list_graph" if ENV['MOCK'] == 'on'
     subject { graphs }
