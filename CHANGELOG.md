@@ -1,3 +1,9 @@
+# 0.80.0.2 (2014/03/04)
+
+Fixes
+
+* Fix `short_metrics=` option is not working
+
 # 0.80.0.1 (2014/03/04)
 
 Fixes
