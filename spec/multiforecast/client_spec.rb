@@ -20,9 +20,33 @@ describe MultiForecast::Client do
     end
   end
 
-  context "#debug_dev" do
-    subject { MultiForecast::Client.new('mapping' => {'app1/' => 'http://localhost:5125'}) }
-    it { expect { subject.debug_dev = STDOUT }.not_to raise_error }
+  context "options" do
+    context "debug_dev" do
+      context 'default' do
+        subject { MultiForecast::Client.new('mapping' => {'app1/' => 'http://localhost:5125'}) }
+        it { expect(subject.debug_dev).to be_nil }
+      end
+
+      context 'STDOUT' do
+        subject { MultiForecast::Client.new('mapping' => {'app1/' => 'http://localhost:5125'}, 'debug_dev' => STDOUT) }
+        it { expect(subject.debug_dev).to eql(STDOUT) }
+      end
+    end
+
+    context "short_metrics" do
+      context 'default' do
+        subject { MultiForecast::Client.new('mapping' => {'app1/' => 'http://localhost:5125'}) }
+        it { expect(subject.short_metrics).to eql(true) }
+      end
+      context 'false' do
+        subject { MultiForecast::Client.new('mapping' => {'app1/' => 'http://localhost:5125'}, 'short_metrics' => false) }
+        it { expect(subject.short_metrics).to eql(false) }
+      end
+      context 'true' do
+        subject { MultiForecast::Client.new('mapping' => {'app1/' => 'http://localhost:5125'}, 'short_metrics' => true) }
+        it { expect(subject.short_metrics).to eql(true) }
+      end
+    end
   end
 
   context "#list_graph" do

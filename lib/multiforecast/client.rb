@@ -19,7 +19,7 @@ module MultiForecast
       mapping = opts['mapping'] || { '' => 'http://localhost:5125' }
       # remove heading / of path
       mapping.each {|key, val| @mapping[lstrip(key, '/')] = val }
-      @short_metrics = opts['short_metrics'] || true
+      @short_metrics = opts['short_metrics'].nil? || opts['short_metrics'] # default true
 
       @clients = {}
       @base_uris = {}
@@ -31,6 +31,7 @@ module MultiForecast
         @clients[path] = GrowthForecast::Client.new(base_uri)
         @base_uris[path] = out_uri || base_uri
       end
+      self.debug_dev = opts['debug_dev'] if opts['debug_dev']
     end
 
     # set the `debug_dev` attribute of HTTPClient
