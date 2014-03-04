@@ -1,3 +1,9 @@
+# 0.80.0.1 (2014/03/04)
+
+Fixes
+
+* Fix `debug_dev=` is not working
+
 # 0.80.0.0 (2014/02/03)
 
 Changes
