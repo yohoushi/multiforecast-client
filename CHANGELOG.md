@@ -1,3 +1,9 @@
+# 0.80.0.3 (2014/03/20)
+
+Enhancement
+
+* Add regexp option for delete command
+
 # 0.80.0.2 (2014/03/04)
 
 Fixes
