@@ -51,13 +51,15 @@ class MultiForecast::CLI < Thor
     ex) multiforecast delete 'test/test' -c multiforecast.yml
   LONGDESC
   option :graph_names,   :type => :array, :aliases => '-g'
+  option :regexp,        :type => :string, :aliases => '-r'
   def delete(base_path)
     base_path = lstrip(base_path, '/')
+    regexp = Regexp.new(@options['regexp']) if @options['regexp']
 
-    graphs = @client.list_graph(base_path)
+    graphs = @client.list_graph(base_path, regexp)
     delete_graphs(graphs, @options['graph_names'])
 
-    complexes = @client.list_complex(base_path)
+    complexes = @client.list_complex(base_path, regexp)
     delete_complexes(complexes, @options['graph_names'])
     $stderr.puts "Not found" if graphs.empty? and complexes.empty? unless @options['silent']
   end

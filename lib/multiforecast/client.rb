@@ -82,6 +82,7 @@ module MultiForecast
 
     # Get the list of graphs, /json/list/graph
     # @param [String] base_path
+    # @param [Regexp] regexp list only matched graphs
     # @return [Hash] list of graphs
     # @example
     # [
@@ -98,13 +99,15 @@ module MultiForecast
     #    "path"=>"test/hostname/<1sec_count",
     #    "id"=>3},
     # ]
-    def list_graph(base_path = nil)
+    def list_graph(base_path = nil, regexp = nil)
       clients(base_path).inject([]) do |ret, client|
         graphs = []
         client.list_graph.each do |graph|
           graph['base_uri'] = client.base_uri
           graph['path']  = path(graph['service_name'], graph['section_name'], graph['graph_name'])
-          graphs << graph if base_path.nil? or graph['path'].index(base_path) == 0
+          if base_path.nil? or graph['path'].index(base_path) == 0
+            graphs << graph if !regexp or regexp.match(graph['path'])
+          end
         end
         ret = ret + graphs
       end
@@ -173,6 +176,8 @@ module MultiForecast
     end
 
     # Get the list of complex graphs, /json/list/complex
+    # @param [String] base_path
+    # @param [Regexp] regexp list only matched graphs
     # @return [Hash] list of complex graphs
     # @example
     # [
@@ -189,13 +194,15 @@ module MultiForecast
     #    "graph_name"=>"test%2Fhostname%2F%3C1sec_count",
     #    "id"=>3},
     # ]
-    def list_complex(base_path = nil)
+    def list_complex(base_path = nil, regexp = nil)
       clients(base_path).inject([]) do |ret, client|
         graphs = []
         client.list_complex.each do |graph|
           graph['base_uri'] = client.base_uri
           graph['path']  = path(graph['service_name'], graph['section_name'], graph['graph_name'])
-          graphs << graph if base_path.nil? or graph['path'].index(base_path) == 0
+          if base_path.nil? or graph['path'].index(base_path) == 0
+            graphs << graph if !regexp or regexp.match(graph['path'])
+          end
         end
         ret = ret + graphs
       end
