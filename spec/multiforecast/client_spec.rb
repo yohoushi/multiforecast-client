@@ -22,7 +22,15 @@ describe MultiForecast::Client do
 
   context "#list_graph" do
     include_context "stub_list_graph" if ENV['MOCK'] == 'on'
-    subject { graphs }
+    subject { multiforecast.list_graph }
+    its(:size) { should > 0 }
+    id_keys.each {|key| its(:first) { should have_key(key) } }
+  end
+
+  context "#list_graph(regexp)" do
+    include_context "stub_list_graph" if ENV['MOCK'] == 'on'
+    let(:graph) { multiforecast.list_graph.first }
+    subject { multiforecast.list_graph('', Regexp.new(graph['graph_name'])) }
     its(:size) { should > 0 }
     id_keys.each {|key| its(:first) { should have_key(key) } }
   end
