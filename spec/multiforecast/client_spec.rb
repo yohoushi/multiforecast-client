@@ -7,6 +7,7 @@ describe MultiForecast::Client do
                    sulimit unit sort updated_at adjust type sllimit meta md5]
   complex_keys = %w[number complex created_at service_name section_name id graph_name data sumup
                    description sort updated_at]
+  vrule_keys   = %w[base_uri path id graph_path color time dashes description]
 
   context "#initialize" do
     context "typical" do
@@ -133,6 +134,22 @@ describe MultiForecast::Client do
         complex_keys.each {|key| it { subject.should have_key(key) } }
       end
     end
+  end
+
+  context "#get_vrule" do
+    include_context "stub_get_vrule" if ENV['MOCK'] == 'on'
+    subject { multiforecast.get_vrule(graph["path"]).first }
+    vrule_keys.each {|key| it { subject.should have_key(key) } }
+  end
+
+  context "#post_vrule" do
+    include_context "stub_post_vrule" if ENV['MOCK'] == 'on'
+    params = {
+      'dashes' => '2,10',
+    }
+    subject { multiforecast.post_vrule(graph["path"], params) }
+    it { subject["error"].should == 0 }
+    params.keys.each {|key| it { subject["data"][key].should == params[key] } }
   end
 
   describe "graph_uri_term" do

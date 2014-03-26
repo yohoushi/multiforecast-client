@@ -310,6 +310,52 @@ module MultiForecast
       "#{@base_uris[id(path)]}/complex/graph/#{uri_escape(service_name(path))}/#{uri_escape(section_name(path))}/#{uri_escape(graph_name(path))}#{'?' unless params.empty?}#{query_string(params)}"
     end
 
+    # Get the data of vrules, GET /vrules/summary/:path
+    # @param [String] path
+    # @return [Array] the vrule data
+    # @example
+    #[
+    #{
+    #  "graph_path"=>"/hoge/hoge/hoge",
+    #  "color"=>"#FF0000",
+    #  "time"=>1395826210,
+    #  "id"=>1,
+    #  "dashes"=>"",
+    #  "description"=>""
+    #},
+    #{
+    #  "graph_path"=>"/hoge/hoge/hoge",
+    #  "color"=>"#FF0000",
+    #  "time"=>1395826363,
+    #  "id"=>2,
+    #  "dashes"=>"2,10",
+    #  "description"=>""
+    #}
+    def get_vrule(path)
+      client(path).get_vrule(service_name(path), section_name(path), graph_name(path)).map do |vrule|
+        vrule['base_uri'] = client(path).base_uri
+        vrule['path']  = path
+        vrule
+      end
+    end
+
+    # Post parameters to a graph, POST /vrules/api/:path
+    # @param [String] path
+    # @param [Hash] params The POST parameters. See #get_graph
+    # @return [Hash] the vrule property
+    # @example
+    #{"error"=>0,
+    #"data"=>{
+    #  "graph_path"=>"/hoge/hoge/hoge",
+    #  "color"=>"#FF0000",
+    #  "time"=>1395826210,
+    #  "id"=>1,
+    #  "dashes"=>"2,10",
+    #  "description"=>""}}
+    def post_vrule(path = nil, params = {})
+      client(path).post_vrule(service_name(path), section_name(path), graph_name(path), params)
+    end
+
     # process the time params (from and to)
     def preprocess_time_params(params)
       params = params.dup
