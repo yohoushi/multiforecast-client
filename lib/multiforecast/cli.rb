@@ -93,6 +93,20 @@ class MultiForecast::CLI < Thor
     setup_complex(options['from_graphs'], options['to_complex'], graphs)
   end
 
+  desc 'vrule <json> <path>', 'Add a vertical line'
+  long_desc <<-LONGDESC
+    Add a vertical line
+
+    ex) multiforecast vrule '{"dashes":"2,10"}' 'test/test' -c multiforecast.yml
+  LONGDESC
+  def vrule(json, path)
+    path = lstrip(path, '/')
+    exec do
+      res = @client.post_vrule(path, JSON.parse(json))
+      $stdout.puts res unless @options['silent']
+    end
+  end
+
   private
 
   def delete_graphs(graphs, graph_names = nil)
