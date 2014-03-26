@@ -161,3 +161,32 @@ shared_context "stub_create_complex" do
   before(:each, &proc)
 end
 
+shared_context "stub_get_vrule" do
+  def vrule_example
+    {
+      "base_uri"=>"http://localhost:5125",
+      "path"=>"app name/host name/<1sec count",
+      "graph_path"=>"/hoge/hoge/hoge",
+      "color"=>"#FF0000",
+      "time"=>1395826210,
+      "id"=>1,
+      "dashes"=>"2,10",
+      "description"=>""
+    }
+  end
+
+  proc = Proc.new do
+    stub_request(:get, "#{base_uri}/vrule/summary/#{gfpath(graph['path'])}").
+    to_return(:status => 200, :body => [vrule_example].to_json)
+  end
+  before(:each, &proc)
+end
+
+shared_context "stub_post_vrule" do
+  include_context "stub_get_vrule"
+  proc = Proc.new do
+    stub_request(:post, "#{base_uri}/vrule/api/#{gfpath(graph['path'])}").
+    to_return(:status => 200, :body => { "error" => 0, "data" => vrule_example }.to_json)
+  end
+  before(:each, &proc)
+end
