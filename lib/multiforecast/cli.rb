@@ -52,7 +52,9 @@ class MultiForecast::CLI < Thor
   LONGDESC
   option :graph_names,   :type => :array, :aliases => '-g'
   option :regexp,        :type => :string, :aliases => '-r'
+  option :execute,       :type => :boolean, :aliases => '-e'
   def delete(base_path)
+    puts 'Dry run mode: Use --execute option to run' unless @options['execute']
     base_path = lstrip(base_path, '/')
     regexp = Regexp.new(@options['regexp']) if @options['regexp']
 
@@ -114,7 +116,7 @@ class MultiForecast::CLI < Thor
       path = graph['path']
       next if graph_names and !graph_names.include?(File.basename(path))
       puts "Delete #{path}" unless @options['silent']
-      exec { @client.delete_graph(path) }
+      exec { @client.delete_graph(path) } if @options['execute']
     end
   end
 
@@ -123,7 +125,7 @@ class MultiForecast::CLI < Thor
       path = graph['path']
       next if graph_names and !graph_names.include?(File.basename(path))
       puts "Delete #{path}" unless @options['silent']
-      exec { @client.delete_complex(path) }
+      exec { @client.delete_complex(path) } if @options['execute']
     end
   end
 
